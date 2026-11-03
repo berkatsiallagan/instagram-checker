@@ -4,6 +4,7 @@ import {
   AUTHOR_SITE,
   AUTHOR_URL,
   DEMO_VIDEO_URL,
+  SHOW_DEMO_VIDEO,
   VERSION,
   YEAR,
 } from "./config";
@@ -109,10 +110,12 @@ export function mountApp(
   const error = el("p", { className: "error" });
   error.setAttribute("role", "alert");
 
-  const demoLink = externalLink(DEMO_VIDEO_URL, icon("play_circle"), t.demo);
-  demoLink.className = "link-inline";
-
-  const actions = el("p", { className: "hint" }, demoLink);
+  let actions: HTMLElement | null = null;
+  if (SHOW_DEMO_VIDEO) {
+    const demoLink = externalLink(DEMO_VIDEO_URL, icon("play_circle"), t.demo);
+    demoLink.className = "link-inline";
+    actions = el("p", { className: "hint" }, demoLink);
+  }
 
   let checkBtn: HTMLButtonElement | null = null;
   let checkLabel: HTMLSpanElement | null = null;
@@ -161,7 +164,7 @@ export function mountApp(
 
   const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput];
   if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
-  children.push(actions);
+  if (actions) children.push(actions);
   if (opts.onCheck && opts.showWarning !== false) {
     children.push(el("p", { className: "hint" }, t.warning));
   }
