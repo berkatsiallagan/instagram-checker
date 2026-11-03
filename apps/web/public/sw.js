@@ -2,7 +2,6 @@ const CACHE_NAME = "ig-checker-v1";
 const ASSETS = [
   "/",
   "/manifest.webmanifest",
-  "/icon.svg",
   "/icon.png",
   "/og.png",
   "/robots.txt",
