@@ -9,7 +9,6 @@ import {
 } from "./config";
 import { icon } from "./icons";
 import { LANGS, initialLang, saveLang, strings, type Lang, type Strings } from "./i18n";
-import { sampleFiles } from "./sample";
 
 export interface MountOptions {
   /** Jika ada, tampilkan tombol Cek yang memanggil fungsi ini (dipakai extension). */
@@ -110,16 +109,10 @@ export function mountApp(
   const error = el("p", { className: "error" });
   error.setAttribute("role", "alert");
 
-  const sampleBtn = el(
-    "button",
-    { className: "link", type: "button" },
-    icon("description"),
-    t.sample
-  );
   const demoLink = externalLink(DEMO_VIDEO_URL, icon("play_circle"), t.demo);
   demoLink.className = "link-inline";
 
-  const actions = el("p", { className: "hint" }, sampleBtn, demoLink);
+  const actions = el("p", { className: "hint" }, demoLink);
 
   let checkBtn: HTMLButtonElement | null = null;
   let checkLabel: HTMLSpanElement | null = null;
@@ -300,8 +293,6 @@ export function mountApp(
     if (fileInput.files) void handleFiles(fileInput.files);
     fileInput.value = "";
   });
-
-  sampleBtn.addEventListener("click", () => handleTexts(sampleFiles()));
 
   searchInput.addEventListener("input", () => {
     query = searchInput.value;
