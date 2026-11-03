@@ -2,8 +2,8 @@
 
 # Follback Checker
 
-Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.<br>
-Tanpa server, tanpa akun, tanpa pelacak.
+Find out who does not follow you back on Instagram, right on your device.<br>
+No server, no account, no tracking.
 
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-10%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
@@ -11,88 +11,90 @@ Tanpa server, tanpa akun, tanpa pelacak.
 [![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
 
-[Fitur](#fitur) · [Cara pakai](#cara-pakai) · [Privasi](#privasi) · [Arsitektur](#arsitektur) · [Pengembangan](#pengembangan) · [Roadmap](#roadmap)
+**English** · [Bahasa Indonesia](README.id.md)
+
+[Features](#features) · [Usage](#usage) · [Privacy](#privacy) · [Architecture](#architecture) · [Development](#development) · [Roadmap](#roadmap)
 
 </div>
 
 ---
 
-## Tentang
+## About
 
-Follback Checker membandingkan daftar followers dan following Instagram milikmu, lalu menampilkan tiga hal: siapa yang tidak follow balik, siapa yang follow kamu tapi belum kamu follow, dan siapa yang saling follow.
+Follback Checker compares your Instagram followers and following lists and shows three things: who does not follow you back, who follows you but you do not follow back, and who follows each other with you.
 
-Proyek ini punya dua bentuk yang memakai satu core logic yang sama:
+It comes in two forms that share one core logic:
 
-| Bentuk | Cara kerja | Cocok untuk |
+| Form | How it works | Best for |
 |---|---|---|
-| **Website** | Drag-drop file JSON dari export resmi Instagram | Siapa saja, tanpa memasang apa pun |
-| **Extension browser** | Satu tombol, membaca data lewat sesi login milikmu | Pengecekan cepat tanpa mengunduh export |
+| **Website** | Drag and drop the JSON files from Instagram's official data export | Anyone, nothing to install |
+| **Browser extension** | One button, reads data through your own logged-in session | Quick checks without downloading an export |
 
-Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana pun.
+All processing happens in the browser. No data is sent to any server.
 
-## Fitur
+## Features
 
-- Tiga tampilan hasil: **Tidak follback**, **Fans**, dan **Mutual**
-- Pencarian cepat di dalam hasil
-- Ekspor ke CSV, dengan perlindungan formula injection untuk spreadsheet
-- Mendukung banyak file sekaligus (`followers_1.json`, `followers_2.json`, dan seterusnya)
-- Pesan error yang jelas saat format file tidak dikenal
-- Tampilan satu field, mode terang dan gelap mengikuti sistem
+- Three result views: **Not following back**, **Fans**, and **Mutual**
+- Quick search inside results
+- CSV export, with spreadsheet formula injection protection
+- Multiple files at once (`followers_1.json`, `followers_2.json`, and so on)
+- Clear error messages when the file format is not recognized
+- Single field interface, light and dark mode follow the system
 
-## Cara pakai
+## Usage
 
-### Website (drag-drop JSON)
+### Website (drag and drop JSON)
 
-1. Di Instagram buka **Pengaturan > Pusat Akun > Informasi dan izin kamu > Unduh informasi kamu**.
-2. Pilih **Beberapa informasi kamu**, centang **Followers dan following**, format **JSON**.
-3. Setelah file siap, unduh dan ekstrak arsipnya.
-4. Seret `followers_1.json` dan `following.json` (dari folder `connections/followers_and_following`) ke kotak di halaman.
+1. In Instagram, open **Settings > Accounts Center > Your information and permissions > Download your information**.
+2. Choose **Some of your information**, select **Followers and following**, and set the format to **JSON**.
+3. When the file is ready, download and extract the archive.
+4. Drag `followers_1.json` and `following.json` (from `connections/followers_and_following`) into the box on the page.
 
-> Menu Instagram bisa berubah dari waktu ke waktu. Jika langkah di atas tidak cocok, cari opsi "Download your information".
+> Instagram menus change from time to time. If the steps above do not match, look for the "Download your information" option.
 
 ### Extension
 
-Extension membaca data lewat sesi login Instagram milikmu dengan jeda antar permintaan dan batas maksimum. Ada risiko pembatasan akun dari Instagram jika dipakai berlebihan, jadi jalur JSON tetap disarankan sebagai pilihan utama.
+The extension reads data through your own logged-in Instagram session, with delays between requests and a hard limit. Instagram may restrict your account if it is used excessively, so the JSON route is recommended as the primary option.
 
-## Privasi
+## Privacy
 
-Klaim privasi proyek ini bisa kamu verifikasi sendiri:
+The privacy claims of this project can be verified by anyone:
 
-- Tidak ada backend, database, akun, atau analytics.
-- File dibaca di browser dan hanya disimpan di memori.
-- Website memakai Content Security Policy yang memblokir koneksi keluar.
-- Extension hanya berbicara dengan `instagram.com`, dan hanya saat kamu menekan tombol.
-- Seluruh kode terbuka dan tidak ada dependency runtime pihak ketiga di core.
+- No backend, database, account, or analytics.
+- Files are read in the browser and kept in memory only.
+- The website uses a Content Security Policy that blocks outgoing connections.
+- The extension only talks to `instagram.com`, and only when you press the button.
+- All code is open, and the core has no third-party runtime dependencies.
 
-Selengkapnya ada di [PRIVACY.md](PRIVACY.md).
+More details in [PRIVACY.md](PRIVACY.md).
 
-## Arsitektur
+## Architecture
 
 ```
 .
 ├── packages/
-│   └── core/          Parser, diff, dan ekspor CSV (TypeScript murni)
+│   └── core/          Parser, diff, and CSV export (plain TypeScript)
 ├── apps/
-│   ├── web/           Website statis (Next.js static export)
-│   └── extension/     Extension Manifest V3
+│   ├── web/           Static website (Next.js static export)
+│   └── extension/     Manifest V3 extension
 └── PRIVACY.md
 ```
 
-Alur data:
+Data flow:
 
 ```mermaid
 flowchart LR
-  A["File JSON atau sesi IG"] --> B["parse"]
+  A["JSON file or IG session"] --> B["parse"]
   B --> C["diff"]
-  C --> D["Tampilan hasil"]
-  C --> E["Ekspor CSV"]
+  C --> D["Result view"]
+  C --> E["CSV export"]
 ```
 
-Core tidak punya dependency runtime dan tidak melakukan I/O, sehingga mudah diuji dan dipakai ulang oleh website maupun extension.
+The core has no runtime dependencies and performs no I/O, which makes it easy to test and reuse in both the website and the extension.
 
-## Pengembangan
+## Development
 
-Prasyarat: Node.js 20 atau lebih baru.
+Requirements: Node.js 20 or newer.
 
 ```bash
 git clone https://github.com/berkatsiallagan/instagram-checker.git
@@ -101,7 +103,7 @@ npm install
 npm test
 ```
 
-Contoh memakai core langsung:
+Using the core directly:
 
 ```ts
 import { parseText, diff } from "@follback/core";
@@ -114,31 +116,31 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 
 ## Status
 
-Proyek sedang dikembangkan. Yang sudah selesai dan yang belum:
+The project is under development. What is done and what is not:
 
-| Komponen | Status |
+| Component | Status |
 |---|---|
-| Core (parser, diff, CSV) dan test | Selesai |
-| Website | Belum dimulai |
-| Extension | Belum dimulai |
+| Core (parser, diff, CSV) and tests | Done |
+| Website | Not started |
+| Extension | Not started |
 
 ## Roadmap
 
-- [x] Core parser, diff, dan ekspor CSV
-- [ ] UI bersama (satu field, tanpa dekorasi)
-- [ ] Website statis di Cloudflare Pages
-- [ ] Extension mode JSON
-- [ ] Extension mode baca langsung dari sesi login
-- [ ] Rilis di GitHub Releases, Firefox Add-ons, dan Edge Add-ons
+- [x] Core parser, diff, and CSV export
+- [ ] Shared UI (single field, no decoration)
+- [ ] Static website on Cloudflare Pages
+- [ ] Extension, JSON mode
+- [ ] Extension, direct read from logged-in session
+- [ ] Release on GitHub Releases, Firefox Add-ons, and Edge Add-ons
 
-## Kontribusi
+## Contributing
 
-Issue dan pull request diterima. Untuk perubahan besar, buka issue dulu supaya arahnya bisa didiskusikan. Pastikan `npm test` lolos sebelum mengirim PR.
+Issues and pull requests are welcome. For large changes, open an issue first so the direction can be discussed. Make sure `npm test` passes before sending a PR. Translations of this README are also welcome.
 
 ## Disclaimer
 
-Proyek ini tidak berafiliasi dengan Instagram atau Meta. Gunakan sesuai ketentuan layanan Instagram dan tanggung jawab sendiri.
+This project is not affiliated with Instagram or Meta. Use it according to Instagram's terms of service and at your own responsibility.
 
-## Lisensi
+## License
 
 [MIT](LICENSE) &copy; 2026 Berkat Tua Siallagan
