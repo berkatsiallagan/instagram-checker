@@ -1,6 +1,6 @@
 <div align="center">
 
-# Follback Checker
+# Instagram Checker
 
 Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
@@ -22,7 +22,7 @@ No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
 
 ## About
 
-Follback Checker compares your Instagram followers and following lists and shows three things: who does not follow you back, who follows you but you do not follow back, and who follows each other with you.
+Instagram Checker compares your Instagram followers and following lists and shows three things: who does not follow you back, who follows you but you do not follow back, and who follows each other with you.
 
 It comes in two forms that share one core logic:
 
@@ -139,7 +139,7 @@ This project is not affiliated with Instagram or Meta. Use it according to Insta
 
 ## Tentang
 
-Follback Checker membandingkan daftar followers dan following Instagram milikmu, lalu menampilkan tiga hal: siapa yang tidak follow balik, siapa yang follow kamu tapi belum kamu follow, dan siapa yang saling follow.
+Instagram Checker membandingkan daftar followers dan following Instagram milikmu, lalu menampilkan tiga hal: siapa yang tidak follow balik, siapa yang follow kamu tapi belum kamu follow, dan siapa yang saling follow.
 
 Proyek ini punya dua bentuk yang memakai satu core logic yang sama:
 

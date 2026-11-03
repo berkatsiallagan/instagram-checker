@@ -1,4 +1,4 @@
-import { diff, parseFiles, toCsv, type Result } from "@follback/core";
+import { ParseError, diff, parseFiles, toCsv, type Result } from "@follback/core";
 import {
   AUTHOR_NAME,
   AUTHOR_SITE,
@@ -8,7 +8,7 @@ import {
   YEAR,
 } from "./config";
 import { icon } from "./icons";
-import { detectLang, strings, type Strings } from "./i18n";
+import { LANGS, initialLang, saveLang, strings, type Lang, type Strings } from "./i18n";
 import { sampleFiles } from "./sample";
 
 export interface MountOptions {
@@ -18,6 +18,13 @@ export interface MountOptions {
   ) => Promise<{ followers: Set<string>; following: Set<string> }>;
   /** Teks peringatan tambahan di bawah tombol Cek. */
   showWarning?: boolean;
+}
+
+export interface AppState {
+  result?: Result | null;
+  tab?: TabKey;
+  query?: string;
+  error?: unknown;
 }
 
 type TabKey = keyof Result;
@@ -41,15 +48,46 @@ function externalLink(href: string, ...children: (Node | string)[]): HTMLAnchorE
   );
 }
 
-export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
-  const lang = detectLang();
+export function mountApp(
+  root: HTMLElement,
+  opts: MountOptions = {},
+  state: AppState = {}
+): void {
+  const lang: Lang = initialLang();
   const t: Strings = strings(lang);
   document.documentElement.lang = lang;
   document.title = t.title;
 
-  let result: Result | null = null;
-  let tab: TabKey = "notFollowingBack";
-  let query = "";
+  let result: Result | null = state.result ?? null;
+  let tab: TabKey = state.tab ?? "notFollowingBack";
+  let query = state.query ?? "";
+  let lastError: unknown = state.error ?? null;
+
+  // Language selector
+  const langSelect = el(
+    "select",
+    { className: "lang-select" },
+    ...LANGS.map((code) => {
+      const opt = el("option", { value: code }, code === "id" ? "Bahasa Indonesia" : "English");
+      if (code === lang) opt.selected = true;
+      return opt;
+    })
+  );
+  langSelect.setAttribute("aria-label", t.language);
+  langSelect.addEventListener("change", () => {
+    const nextLang = langSelect.value as Lang;
+    saveLang(nextLang);
+    mountApp(root, opts, { result, tab, query, error: lastError });
+  });
+
+  const topBar = el(
+    "div",
+    { className: "top-bar" },
+    el("div", { className: "lang-picker" }, icon("language"), langSelect)
+  );
+
+  const title = el("h1", {}, t.title);
+  const subtitle = el("p", { className: "subtitle" }, t.subtitle);
 
   const fileInput = el("input", {
     type: "file",
@@ -97,6 +135,7 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
     type: "search",
     placeholder: t.search,
     className: "search",
+    value: query,
   });
   searchInput.setAttribute("aria-label", t.search);
   const searchBox = el("div", { className: "searchbox" }, icon("search"), searchInput);
@@ -109,13 +148,13 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
   );
   const list = el("ul", { className: "list" });
   const section = el("section", { className: "results" }, tabs, searchBox, list, exportBtn);
-  section.hidden = true;
+  section.hidden = result === null;
 
   const footer = el(
     "footer",
     { className: "footer" },
     el("p", { className: "privacy" }, icon("lock"), t.privacy),
-    el("p", {}, `\u00a9 ${YEAR} Follback Checker. v${VERSION}`),
+    el("p", {}, `\u00a9 ${YEAR} Instagram Checker. v${VERSION}`),
     el(
       "p",
       {},
@@ -127,7 +166,7 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
     )
   );
 
-  const children: (Node | string)[] = [el("h1", {}, t.title), drop, fileInput];
+  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput];
   if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
   children.push(actions);
   if (opts.onCheck && opts.showWarning !== false) {
@@ -185,14 +224,29 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
     );
   }
 
+  function renderError(): void {
+    if (!lastError) {
+      error.textContent = "";
+      return;
+    }
+    if (lastError instanceof ParseError) {
+      error.textContent = t.errors[lastError.code] ?? lastError.message;
+    } else if (lastError instanceof Error) {
+      error.textContent = lastError.message;
+    } else {
+      error.textContent = String(lastError);
+    }
+  }
+
   function render(): void {
     section.hidden = result === null;
     renderTabs();
     renderList();
+    renderError();
   }
 
   function show(followers: Set<string>, following: Set<string>): void {
-    error.textContent = "";
+    lastError = null;
     result = diff(followers, following);
     tab = "notFollowingBack";
     query = "";
@@ -201,9 +255,9 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
   }
 
   function fail(e: unknown): void {
+    lastError = e;
     result = null;
     render();
-    error.textContent = e instanceof Error ? e.message : String(e);
   }
 
   function handleTexts(texts: string[]): void {
@@ -258,7 +312,7 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
     if (!result) return;
     const blob = new Blob([toCsv(result)], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const a = el("a", { href: url, download: "follback.csv" });
+    const a = el("a", { href: url, download: "instagram-checker.csv" });
     a.click();
     URL.revokeObjectURL(url);
   });
@@ -282,5 +336,10 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
         label.textContent = t.check;
       }
     });
+  }
+
+  // initial render if restoring state
+  if (result !== null || lastError !== null) {
+    render();
   }
 }

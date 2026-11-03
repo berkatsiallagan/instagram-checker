@@ -1,7 +1,17 @@
+export type ParseErrorCode =
+  | "unknown_format"
+  | "invalid_json"
+  | "bad_entry"
+  | "need_both"
+  | "bad_api"
+  | "api_no_users";
+
 export class ParseError extends Error {
-  constructor(message: string) {
+  readonly code: ParseErrorCode;
+  constructor(code: ParseErrorCode, message: string) {
     super(message);
     this.name = "ParseError";
+    this.code = code;
   }
 }
 
@@ -60,7 +70,8 @@ function extractEntries(data: unknown): Entry[] {
     }
   }
   throw new ParseError(
-    "Format JSON tidak dikenal. Pakai followers_1.json atau following.json dari export Instagram."
+    "unknown_format",
+    "Unrecognized JSON format. Use followers_1.json or following.json from the Instagram export."
   );
 }
 
@@ -70,7 +81,7 @@ export function parseUsernames(data: unknown): Set<string> {
   const result = new Set<string>();
   for (const entry of entries) {
     if (!entry || typeof entry !== "object") {
-      throw new ParseError("Ada entri yang bukan objek di dalam file JSON.");
+      throw new ParseError("bad_entry", "An entry in the JSON file is not an object.");
     }
     const name = usernameFromEntry(entry);
     if (name) result.add(name);
@@ -89,7 +100,8 @@ export function detectKind(data: unknown): Kind {
     if (Array.isArray(rec.relationships_followers)) return "followers";
   }
   throw new ParseError(
-    "Format JSON tidak dikenal. Pakai followers_1.json atau following.json dari export Instagram."
+    "unknown_format",
+    "Unrecognized JSON format. Use followers_1.json or following.json from the Instagram export."
   );
 }
 
@@ -107,7 +119,7 @@ export function parseFiles(texts: string[]): {
     try {
       data = JSON.parse(text);
     } catch {
-      throw new ParseError("File bukan JSON yang valid.");
+      throw new ParseError("invalid_json", "The file is not valid JSON.");
     }
     const kind = detectKind(data);
     const target = kind === "followers" ? followers : following;
@@ -117,7 +129,8 @@ export function parseFiles(texts: string[]): {
   }
   if (!sawFollowers || !sawFollowing) {
     throw new ParseError(
-      "Butuh dua jenis file: followers_1.json dan following.json."
+      "need_both",
+      "Two kinds of files are required: followers_1.json and following.json."
     );
   }
   return { followers, following };
@@ -131,11 +144,11 @@ export interface ApiPage {
 /** Parse satu halaman respons endpoint friendships Instagram (followers atau following). */
 export function parseApiPage(data: unknown): ApiPage {
   if (!data || typeof data !== "object") {
-    throw new ParseError("Respons Instagram tidak valid.");
+    throw new ParseError("bad_api", "Invalid Instagram response.");
   }
   const rec = data as Record<string, unknown>;
   if (!Array.isArray(rec.users)) {
-    throw new ParseError("Respons Instagram tidak berisi daftar pengguna.");
+    throw new ParseError("api_no_users", "Instagram response has no user list.");
   }
   const usernames: string[] = [];
   for (const u of rec.users) {
@@ -157,7 +170,7 @@ export function parseText(text: string): Set<string> {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new ParseError("File bukan JSON yang valid.");
+    throw new ParseError("invalid_json", "The file is not valid JSON.");
   }
   return parseUsernames(data);
 }
