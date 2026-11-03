@@ -78,6 +78,51 @@ export function parseUsernames(data: unknown): Set<string> {
   return result;
 }
 
+export type Kind = "followers" | "following";
+
+/** Tentukan apakah JSON adalah daftar followers atau following. */
+export function detectKind(data: unknown): Kind {
+  if (Array.isArray(data)) return "followers";
+  if (data && typeof data === "object") {
+    const rec = data as Record<string, unknown>;
+    if (Array.isArray(rec.relationships_following)) return "following";
+    if (Array.isArray(rec.relationships_followers)) return "followers";
+  }
+  throw new ParseError(
+    "Format JSON tidak dikenal. Pakai followers_1.json atau following.json dari export Instagram."
+  );
+}
+
+/** Gabungkan banyak file teks JSON menjadi himpunan followers dan following. */
+export function parseFiles(texts: string[]): {
+  followers: Set<string>;
+  following: Set<string>;
+} {
+  const followers = new Set<string>();
+  const following = new Set<string>();
+  let sawFollowers = false;
+  let sawFollowing = false;
+  for (const text of texts) {
+    let data: unknown;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new ParseError("File bukan JSON yang valid.");
+    }
+    const kind = detectKind(data);
+    const target = kind === "followers" ? followers : following;
+    for (const name of parseUsernames(data)) target.add(name);
+    if (kind === "followers") sawFollowers = true;
+    else sawFollowing = true;
+  }
+  if (!sawFollowers || !sawFollowing) {
+    throw new ParseError(
+      "Butuh dua jenis file: followers_1.json dan following.json."
+    );
+  }
+  return { followers, following };
+}
+
 /** Sama seperti parseUsernames, tapi menerima teks mentah file. */
 export function parseText(text: string): Set<string> {
   let data: unknown;

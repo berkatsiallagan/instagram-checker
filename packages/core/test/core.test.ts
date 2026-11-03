@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { ParseError, diff, parseText, parseUsernames, toCsv } from "../src";
+import {
+  ParseError,
+  diff,
+  parseFiles,
+  parseText,
+  parseUsernames,
+  toCsv,
+} from "../src";
 
 const followersJson = [
   {
@@ -52,6 +59,27 @@ describe("parseUsernames", () => {
 
   it("menolak entri non-objek", () => {
     expect(() => parseUsernames([1])).toThrow(ParseError);
+  });
+});
+
+describe("parseFiles", () => {
+  it("menggabungkan banyak file dan mengenali jenisnya", () => {
+    const second = [{ title: "", string_list_data: [{ value: "zed" }] }];
+    const { followers, following } = parseFiles([
+      JSON.stringify(followersJson),
+      JSON.stringify(second),
+      JSON.stringify(followingJson),
+    ]);
+    expect([...followers].sort()).toEqual(["alice", "bob", "zed"]);
+    expect([...following].sort()).toEqual(["bob", "carol"]);
+  });
+
+  it("gagal jika salah satu jenis tidak ada", () => {
+    expect(() => parseFiles([JSON.stringify(followersJson)])).toThrow(ParseError);
+  });
+
+  it("gagal pada teks bukan JSON", () => {
+    expect(() => parseFiles(["xx"])).toThrow(ParseError);
   });
 });
 

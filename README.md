@@ -6,7 +6,7 @@ Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-10%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
+[![Tests](https://img.shields.io/badge/tests-13%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
 [![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
@@ -112,13 +112,13 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 | Component | Status |
 |---|---|
 | Core (parser, diff, CSV) and tests | Done |
-| Website | Not started |
+| Shared UI and website | Implemented, build not yet verified |
 | Extension | Not started |
 
 ## Roadmap
 
 - [x] Core parser, diff, and CSV export
-- [ ] Shared UI (single field, no decoration)
+- [x] Shared UI (single field, no decoration)
 - [ ] Static website on Cloudflare Pages
 - [ ] Extension, JSON mode
 - [ ] Extension, direct read from logged-in session
@@ -204,13 +204,13 @@ npm test
 | Komponen | Status |
 |---|---|
 | Core (parser, diff, CSV) dan test | Selesai |
-| Website | Belum dimulai |
+| UI bersama dan website | Sudah ditulis, build belum diverifikasi |
 | Extension | Belum dimulai |
 
 ## Roadmap
 
 - [x] Core parser, diff, dan ekspor CSV
-- [ ] UI bersama (satu field, tanpa dekorasi)
+- [x] UI bersama (satu field, tanpa dekorasi)
 - [ ] Website statis di Cloudflare Pages
 - [ ] Extension mode JSON
 - [ ] Extension mode baca langsung dari sesi login
