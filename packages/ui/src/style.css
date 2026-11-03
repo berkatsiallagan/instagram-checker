@@ -70,6 +70,12 @@ main {
   margin-bottom: 12px;
 }
 
+.open-full-tab-btn {
+  font-size: 13px;
+  margin-right: auto;
+  text-decoration: none;
+}
+
 .lang-picker {
   display: inline-flex;
   align-items: center;

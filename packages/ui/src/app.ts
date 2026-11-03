@@ -195,8 +195,7 @@ export function mountApp(
       "button",
       {
         type: "button",
-        className: "link-inline",
-        style: "font-size: 13px; margin-right: auto; text-decoration: none;",
+        className: "link-inline open-full-tab-btn",
         title: "Buka tampilan di tab browser penuh / Open in full browser tab",
       },
       icon("open_in_new"),
