@@ -58,6 +58,7 @@ interface Snapshot {
   time: number;
   followers: string[];
   following: string[];
+  extras?: Partial<Record<ExtraCategoryKey, string[]>>;
 }
 
 export function mountApp(
@@ -77,6 +78,33 @@ export function mountApp(
   let sortMode: SortMode = state.sortMode ?? "default";
   let rawFollowers: string[] | null = state.rawFollowers ?? null;
   let rawFollowing: string[] | null = state.rawFollowing ?? null;
+
+  // Restore riwayat analisis yang tersimpan jika ada
+  if (!result) {
+    try {
+      const raw = localStorage.getItem(SNAPSHOT_KEY);
+      if (raw) {
+        const snap: Snapshot = JSON.parse(raw);
+        if (Array.isArray(snap?.followers) && Array.isArray(snap?.following)) {
+          const fSet = new Set<string>(snap.followers);
+          const gSet = new Set<string>(snap.following);
+          const extSets: Partial<Record<ExtraCategoryKey, Set<string>>> = {};
+          if (snap.extras && typeof snap.extras === "object") {
+            for (const [k, v] of Object.entries(snap.extras)) {
+              if (Array.isArray(v)) {
+                extSets[k as ExtraCategoryKey] = new Set(v as string[]);
+              }
+            }
+          }
+          rawFollowers = snap.followers;
+          rawFollowing = snap.following;
+          result = diff(fSet, gSet, extSets);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   const UNFOLLOWED_KEY = "instagram-checker-unfollowed";
   const unfollowedSet = new Set<string>();
@@ -248,6 +276,31 @@ export function mountApp(
     icon("download"),
     t.exportCsv
   );
+
+  const resetBtn = el(
+    "button",
+    { className: "link", type: "button" },
+    icon("refresh"),
+    t.resetData
+  );
+  resetBtn.addEventListener("click", () => {
+    if (window.confirm(t.confirmReset)) {
+      try {
+        localStorage.removeItem(SNAPSHOT_KEY);
+        localStorage.removeItem(UNFOLLOWED_KEY);
+      } catch {
+        // ignore
+      }
+      result = null;
+      rawFollowers = null;
+      rawFollowing = null;
+      unfollowedSet.clear();
+      render();
+    }
+  });
+
+  const actionsRow = el("div", { className: "actions-row" }, exportBtn, resetBtn);
+
   const list = el("ul", { className: "list" });
   const section = el(
     "section",
@@ -257,7 +310,7 @@ export function mountApp(
     tabs,
     filterRow,
     list,
-    exportBtn
+    actionsRow
   );
   section.hidden = result === null;
 
@@ -315,12 +368,23 @@ export function mountApp(
     }
   }
 
-  function saveSnapshot(followers: string[], following: string[]): void {
+  function saveSnapshot(
+    followers: string[],
+    following: string[],
+    extras: Partial<Record<ExtraCategoryKey, Set<string>>> = {}
+  ): void {
     try {
+      const serialExtras: Partial<Record<ExtraCategoryKey, string[]>> = {};
+      for (const [k, v] of Object.entries(extras)) {
+        if (v && v instanceof Set) {
+          serialExtras[k as ExtraCategoryKey] = Array.from(v);
+        }
+      }
       const snap: Snapshot = {
         time: Date.now(),
         followers,
         following,
+        extras: serialExtras,
       };
       localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snap));
     } catch {
@@ -535,7 +599,7 @@ export function mountApp(
     query = "";
     searchInput.value = "";
     render();
-    saveSnapshot(fList, gList);
+    saveSnapshot(fList, gList, extras);
   }
 
   function fail(e: unknown): void {

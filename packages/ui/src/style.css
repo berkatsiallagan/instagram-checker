@@ -517,6 +517,15 @@ a {
   color: var(--muted);
 }
 
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
 .footer {
   margin-top: 40px;
   text-align: center;

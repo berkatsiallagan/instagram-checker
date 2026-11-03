@@ -27,6 +27,8 @@ export interface Strings {
   search: string;
   profile: string;
   exportCsv: string;
+  resetData: string;
+  confirmReset: string;
   empty: string;
   privacy: string;
   warning: string;
@@ -79,6 +81,8 @@ const en: Strings = {
   search: "Search username",
   profile: "Open profile",
   exportCsv: "Export CSV",
+  resetData: "Clear saved data",
+  confirmReset: "Clear all saved analysis and unfollow progress?",
   empty: "Nothing here.",
   privacy: "Runs in your browser. Files never leave your device.",
   warning:
@@ -144,6 +148,8 @@ const id: Strings = {
   search: "Cari username",
   profile: "Buka profil",
   exportCsv: "Ekspor CSV",
+  resetData: "Hapus data tersimpan",
+  confirmReset: "Hapus semua data analisis dan progres unfollow yang tersimpan?",
   empty: "Tidak ada data.",
   privacy: "Privat di browsermu. File tidak keluar dari perangkat.",
   warning:
