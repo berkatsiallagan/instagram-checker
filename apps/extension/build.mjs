@@ -29,5 +29,6 @@ if (target === "firefox") {
 writeFileSync(`${out}/manifest.json`, JSON.stringify(manifest, null, 2));
 
 cpSync("popup.html", `${out}/popup.html`);
+cpSync("icons", `${out}/icons`, { recursive: true });
 cpSync("../../packages/ui/src/style.css", `${out}/style.css`);
 console.log(`Built ${target} extension in ${out}`);

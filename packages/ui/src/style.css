@@ -183,7 +183,19 @@ h1 {
 }
 
 .guide-steps li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.guide-steps li strong {
+  display: block;
+  color: var(--fg);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.guide-desc {
+  margin: 0;
+  color: var(--muted);
 }
 
 .guide-steps li:last-child {
@@ -415,6 +427,22 @@ a {
   padding: 8px 10px;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.hide-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.hide-toggle input[type="checkbox"] {
+  cursor: pointer;
+  margin: 0;
 }
 
 .tabs {

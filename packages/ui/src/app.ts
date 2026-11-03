@@ -29,6 +29,7 @@ export interface AppState {
   sortMode?: SortMode;
   rawFollowers?: string[];
   rawFollowing?: string[];
+  hideUnfollowed?: boolean;
 }
 
 type TabKey = keyof Result;
@@ -78,6 +79,7 @@ export function mountApp(
   let sortMode: SortMode = state.sortMode ?? "default";
   let rawFollowers: string[] | null = state.rawFollowers ?? null;
   let rawFollowing: string[] | null = state.rawFollowing ?? null;
+  let hideUnfollowed: boolean = state.hideUnfollowed ?? false;
 
   // Restore riwayat analisis yang tersimpan jika ada
   if (!result) {
@@ -176,6 +178,7 @@ export function mountApp(
       sortMode,
       rawFollowers: rawFollowers ?? undefined,
       rawFollowing: rawFollowing ?? undefined,
+      hideUnfollowed,
     });
   });
 
@@ -239,9 +242,14 @@ export function mountApp(
     el(
       "ol",
       { className: "guide-steps" },
-      el("li", {}, t.guideStep1),
-      el("li", {}, t.guideStep2),
-      el("li", {}, t.guideStep3)
+      ...t.guideSteps.map((step) =>
+        el(
+          "li",
+          {},
+          el("strong", {}, step.title),
+          el("p", { className: "guide-desc" }, step.desc)
+        )
+      )
     ),
     el("p", { className: "guide-note" }, t.guideNote)
   );
@@ -292,7 +300,29 @@ export function mountApp(
     renderList();
   });
 
-  const filterRow = el("div", { className: "filter-row" }, searchBox, sortSelect);
+  const hideCheckbox = el("input", {
+    type: "checkbox",
+    id: "hide-unfollowed-chk",
+  });
+  hideCheckbox.checked = hideUnfollowed;
+  hideCheckbox.addEventListener("change", () => {
+    hideUnfollowed = hideCheckbox.checked;
+    renderList();
+  });
+  const hideLabel = el(
+    "label",
+    { htmlFor: "hide-unfollowed-chk", className: "hide-toggle" },
+    hideCheckbox,
+    t.hideUnfollowed
+  );
+
+  const filterRow = el(
+    "div",
+    { className: "filter-row" },
+    searchBox,
+    sortSelect,
+    hideLabel
+  );
 
   const exportBtn = el(
     "button",
@@ -300,6 +330,40 @@ export function mountApp(
     icon("download"),
     t.exportCsv
   );
+
+  const copyBtn = el(
+    "button",
+    { className: "link", type: "button" },
+    icon("copy"),
+    t.copyUsernames
+  );
+  copyBtn.addEventListener("click", async () => {
+    if (!result) return;
+    const currentList = result[tab] ?? [];
+    const q = query.trim().toLowerCase();
+    let names = currentList.filter((n) => !q || n.includes(q));
+    if (tab === "notFollowingBack" && hideUnfollowed) {
+      names = names.filter((n) => !unfollowedSet.has(n));
+    }
+    if (tab === "notFollowingBack" && hideUnfollowed) {
+      names = names.filter((n) => !unfollowedSet.has(n));
+    }
+    if (sortMode === "az") {
+      names = [...names].sort((a, b) => a.localeCompare(b));
+    } else if (sortMode === "za") {
+      names = [...names].sort((a, b) => b.localeCompare(a));
+    }
+    const textToCopy = names.join("\n");
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      copyBtn.replaceChildren(icon("copy"), t.copiedUsernames);
+      setTimeout(() => {
+        copyBtn.replaceChildren(icon("copy"), t.copyUsernames);
+      }, 2000);
+    } catch {
+      // ignore
+    }
+  });
 
   const resetBtn = el(
     "button",
@@ -325,7 +389,7 @@ export function mountApp(
     }
   });
 
-  const actionsRow = el("div", { className: "actions-row" }, exportBtn, resetBtn);
+  const actionsRow = el("div", { className: "actions-row" }, exportBtn, copyBtn, resetBtn);
 
   const list = el("ul", { className: "list" });
   const section = el(
@@ -580,6 +644,9 @@ export function mountApp(
     const q = query.trim().toLowerCase();
     const currentList = result[tab] ?? [];
     let names = currentList.filter((n) => !q || n.includes(q));
+    if (tab === "notFollowingBack" && hideUnfollowed) {
+      names = names.filter((n) => !unfollowedSet.has(n));
+    }
     if (sortMode === "az") {
       names = [...names].sort((a, b) => a.localeCompare(b));
     } else if (sortMode === "za") {
@@ -697,6 +764,7 @@ export function mountApp(
 
   function render(): void {
     section.hidden = result === null;
+    hideLabel.style.display = tab === "notFollowingBack" ? "inline-flex" : "none";
     renderHistory();
     renderStats();
     renderTabs();

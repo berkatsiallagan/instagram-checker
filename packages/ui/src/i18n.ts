@@ -4,6 +4,11 @@ export type Lang = "en" | "id";
 
 export const LANGS: readonly Lang[] = ["id", "en"];
 
+export interface GuideStep {
+  title: string;
+  desc: string;
+}
+
 export interface Strings {
   title: string;
   subtitle: string;
@@ -36,10 +41,11 @@ export interface Strings {
   developedBy: string;
   language: string;
   guideTitle: string;
-  guideStep1: string;
-  guideStep2: string;
-  guideStep3: string;
+  guideSteps: GuideStep[];
   guideNote: string;
+  hideUnfollowed: string;
+  copyUsernames: string;
+  copiedUsernames: string;
   confirmUnfollow: string;
   unfollowedBadge: string;
   confirmFollow: string;
@@ -95,14 +101,37 @@ const en: Strings = {
   developedBy: "Developed by",
   language: "Language",
   guideTitle: "How to get your Instagram JSON files",
-  guideStep1:
-    "In Instagram, open Settings > Accounts Center > Your information and permissions > Download your information.",
-  guideStep2:
-    "Select Some of your information, check Followers and following, and choose JSON format.",
-  guideStep3:
-    "Once the file is ready, download and extract the zip archive. Drag followers_1.json and following.json here.",
+  guideSteps: [
+    {
+      title: "1. Open Settings Menu",
+      desc: "Go to your Instagram profile, tap the menu icon (three lines) in the top right, and choose Settings and activity. Select Meta Account, then go to Your information and permissions. Tap Export your information, then select Create export.",
+    },
+    {
+      title: "2. Choose Profile and Destination",
+      desc: "Select your Instagram account from the list. Choose Export to device to save the file to your phone or computer.",
+    },
+    {
+      title: "3. Customize Data to Export",
+      desc: "On the confirmation screen, tap Customise information. Uncheck all options, then check ONLY 'Followers and following'. Tap Save. (Optional) Set Date range to All time, choose JSON format, and set Media quality to Lower quality for faster processing.",
+    },
+    {
+      title: "4. Start Export and Verify",
+      desc: "Tap Start export at the bottom. Enter your account password for security verification, then tap Continue.",
+    },
+    {
+      title: "5. Wait and Download File",
+      desc: "You will receive an email that the export is in progress. Wait until you get the second email saying your file is ready (usually a few minutes). Go back to Export your information, find your file under Available downloads, and tap Download. Tap Download again to save it to your device.",
+    },
+    {
+      title: "6. Access Your Files",
+      desc: "The file downloads as a ZIP archive. Open it using a file manager on your phone or extract it on your computer. Inside, open connections > followers_and_following which contains your full follower and following data.",
+    },
+  ],
   guideNote:
     "Note: If an account shows 'Something went wrong' on Instagram, the account has been deactivated, deleted, or suspended. Meta still retains old friendships in following.json, which is why they appear under Not following back.",
+  hideUnfollowed: "Hide unfollowed",
+  copyUsernames: "Copy usernames",
+  copiedUsernames: "Copied!",
   confirmUnfollow: "Mark as unfollowed?",
   unfollowedBadge: "Unfollowed",
   confirmFollow: "Mark as followed?",
@@ -166,14 +195,37 @@ const id: Strings = {
   developedBy: "Dikembangkan oleh",
   language: "Bahasa",
   guideTitle: "Cara mendapatkan file JSON dari Instagram",
-  guideStep1:
-    "Di Instagram, buka Pengaturan > Pusat Akun > Informasi dan izin Anda > Unduh informasi Anda.",
-  guideStep2:
-    "Pilih Beberapa informasi Anda, centang Pengikut dan mengikuti (Followers & following), lalu pilih format JSON.",
-  guideStep3:
-    "Setelah file siap, unduh dan ekstrak arsip zip. Masukkan file followers_1.json dan following.json ke sini.",
+  guideSteps: [
+    {
+      title: "1. Buka Menu Pengaturan",
+      desc: "Masuk ke profil Instagram Anda, ketuk ikon menu (tiga garis) di kanan atas, lalu pilih Settings and activity. Pilih Meta Account (Akun Meta), lalu masuk ke Your information and permissions (Informasi dan izin Anda). Ketuk Export your information (Ekspor informasi Anda), lalu pilih Create export (Buat ekspor).",
+    },
+    {
+      title: "2. Pilih Profil dan Tujuan",
+      desc: "Pilih akun Instagram Anda dari daftar profil. Pilih Export to device (Ekspor ke perangkat) untuk menyimpan file di HP/komputer Anda.",
+    },
+    {
+      title: "3. Atur Data yang Diekspor (Kustomisasi)",
+      desc: "Pada halaman konfirmasi, ketuk Customise information (Kustomisasi informasi). Hapus centang pada semua opsi, lalu centang hanya pada 'Followers and following'. Ketuk Save. (Opsional) Atur Date range ke All time (Sepanjang waktu), pilih Format JSON, dan atur Media quality ke Lower quality (agar proses lebih cepat).",
+    },
+    {
+      title: "4. Mulai Ekspor dan Verifikasi",
+      desc: "Ketuk Start export di bagian bawah. Masukkan password akun Anda untuk verifikasi keamanan, lalu ketuk Continue.",
+    },
+    {
+      title: "5. Tunggu dan Unduh File",
+      desc: "Anda akan menerima email pemberitahuan bahwa proses sedang berjalan. Tunggu hingga Anda menerima email kedua yang menyatakan file sudah siap (biasanya hanya butuh beberapa menit). Buka kembali halaman Export your information, lalu pada bagian Available downloads, ketuk Download. Ketuk Download sekali lagi pada file yang muncul di layar untuk menyimpannya ke perangkat.",
+    },
+    {
+      title: "6. Akses File",
+      desc: "File akan terunduh dalam format JSON (bukan gambar/dokumen biasa). Buka file tersebut menggunakan aplikasi file manager di HP atau ekstrak di komputer. Di dalamnya, Anda akan menemukan folder connections > followers_and_following yang berisi data lengkap daftar pengikut dan akun yang Anda ikuti.",
+    },
+  ],
   guideNote:
     "Catatan: Jika akun bertuliskan 'Something went wrong', akun tersebut telah dinonaktifkan, dihapus, atau dibanned. Meta tetap menyimpan relasi lama di following.json sehingga mereka terdeteksi di daftar Tidak follback.",
+  hideUnfollowed: "Sembunyikan unfollowed",
+  copyUsernames: "Salin username",
+  copiedUsernames: "Tersalin!",
   confirmUnfollow: "Tandai sudah unfollow?",
   unfollowedBadge: "Sudah di-unfollow",
   confirmFollow: "Tandai sudah follow?",
