@@ -10,8 +10,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://instagram-checker.pages.dev"),
-  title: "Instagram Follow Back Checker - Free & Private Unfollower Tracker",
+  metadataBase: new URL("https://ig.berkatsiallagan.com"),
+  title: "Instagram Follow Back Checker",
   description:
     "Free, 100% private Instagram Follow Back Checker. Find out who does not follow you back on Instagram without logging in. Runs entirely in your browser.",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   publisher: "Berkat Tua Siallagan",
   manifest: "/manifest.webmanifest",
   alternates: {
-    canonical: "https://instagram-checker.pages.dev",
+    canonical: "https://ig.berkatsiallagan.com",
   },
   appleWebApp: {
     capable: true,
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   openGraph: {
-    title: "Instagram Follow Back Checker - Free & Private Unfollower Tracker",
+    title: "Instagram Follow Back Checker",
     description:
       "Find out who does not follow you back on Instagram. 100% private, client-side, runs in your browser without servers or login credentials.",
-    url: "https://instagram-checker.pages.dev",
+    url: "https://ig.berkatsiallagan.com",
     siteName: "Instagram Follow Back Checker",
     locale: "id_ID",
     alternateLocale: ["en_US"],
@@ -280,6 +280,7 @@ const jsonLd = {
     {
       "@type": ["SoftwareApplication", "WebApplication"],
       "name": "Instagram Follow Back Checker",
+      "url": "https://ig.berkatsiallagan.com",
       "alternateName": [
         "Instagram Checker",
         "Follback Checker",

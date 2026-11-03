@@ -59,7 +59,7 @@ const en: Strings = {
   profile: "Open profile",
   exportCsv: "Export CSV",
   empty: "Nothing here.",
-  privacy: "Everything runs in your browser. Your files never leave this device.",
+  privacy: "Runs in your browser. Files never leave your device.",
   warning:
     "Reading directly from Instagram may get your account rate limited. Use at your own risk.",
   developedBy: "Developed by",
@@ -111,8 +111,7 @@ const id: Strings = {
   profile: "Buka profil",
   exportCsv: "Ekspor CSV",
   empty: "Tidak ada data.",
-  privacy:
-    "Semua berjalan di browser kamu. File tidak pernah keluar dari perangkat ini.",
+  privacy: "Privat di browsermu. File tidak keluar dari perangkat.",
   warning:
     "Membaca langsung dari Instagram bisa membuat akunmu kena pembatasan. Risiko ditanggung sendiri.",
   developedBy: "Dikembangkan oleh",

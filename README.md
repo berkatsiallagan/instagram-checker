@@ -5,7 +5,7 @@
 Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
-[![Live App](https://img.shields.io/badge/website-instagram--checker.pages.dev-1a3a6b?style=flat-square)](https://instagram-checker.pages.dev/)
+[![Live App](https://img.shields.io/badge/website-ig.berkatsiallagan.com-1a3a6b?style=flat-square)](https://ig.berkatsiallagan.com/)
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-29%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
@@ -14,7 +14,7 @@ Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
 
-**[Try the Web App](https://instagram-checker.pages.dev/)** | **[Coba Versi Web](https://instagram-checker.pages.dev/)**
+**[Try the Web App](https://ig.berkatsiallagan.com/)** | **[Coba Versi Web](https://ig.berkatsiallagan.com/)**
 
 </div>
 
@@ -115,7 +115,7 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 | Component | Status |
 |---|---|
 | Core (parser, diff, CSV) and tests | Done (100% test coverage) |
-| Shared UI and website | Live on [Cloudflare Pages](https://instagram-checker.pages.dev/) |
+| Shared UI and website | Live on [ig.berkatsiallagan.com](https://ig.berkatsiallagan.com/) |
 | Extension | Built (v0.1.0 available on GitHub Releases) |
 
 ## Roadmap
@@ -208,7 +208,7 @@ npm test
 | Komponen | Status |
 |---|---|
 | Core (parser, diff, CSV) dan test | Selesai (100% lolos tes) |
-| UI bersama dan website | Aktif di [Cloudflare Pages](https://instagram-checker.pages.dev/) |
+| UI bersama dan website | Aktif di [ig.berkatsiallagan.com](https://ig.berkatsiallagan.com/) |
 | Extension | Selesai di-bundle (v0.1.0 tersedia di GitHub Releases) |
 
 ## Roadmap

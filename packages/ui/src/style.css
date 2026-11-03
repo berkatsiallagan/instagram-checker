@@ -222,27 +222,18 @@ button.primary {
 
 .privacy {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
-  max-width: 480px;
+  gap: 6px;
   margin: 0 auto 6px;
-  padding: 0 16px;
   font-size: 13px;
-  line-height: 1.45;
-  text-align: left;
+  text-align: center;
 }
 
 .privacy .icon {
   flex-shrink: 0;
-  margin-top: 2px;
-  width: 1.1em;
-  height: 1.1em;
-}
-
-.privacy-text {
-  flex: 1;
-  min-width: 0;
+  width: 1.15em;
+  height: 1.15em;
 }
 
 .footer p {
