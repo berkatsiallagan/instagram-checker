@@ -7,7 +7,7 @@ import {
   VERSION,
   YEAR,
 } from "./config";
-import { icon } from "./icons";
+import { icon, spinner } from "./icons";
 import { LANGS, initialLang, saveLang, strings, type Lang, type Strings } from "./i18n";
 
 export interface MountOptions {
@@ -17,6 +17,8 @@ export interface MountOptions {
   ) => Promise<{ followers: Set<string>; following: Set<string> }>;
   /** Teks peringatan tambahan di bawah tombol Cek. */
   showWarning?: boolean;
+  /** Buka antarmuka di tab browser penuh (khusus extension). */
+  onOpenFullTab?: () => void;
 }
 
 export type SortMode = "default" | "az" | "za";
@@ -187,6 +189,24 @@ export function mountApp(
     { className: "top-bar" },
     el("div", { className: "lang-picker" }, icon("language"), langSelect)
   );
+
+  if (opts.onOpenFullTab) {
+    const fullTabBtn = el(
+      "button",
+      {
+        type: "button",
+        className: "link-inline",
+        style: "font-size: 13px; margin-right: auto; text-decoration: none;",
+        title: "Buka tampilan di tab browser penuh / Open in full browser tab",
+      },
+      icon("open_in_new"),
+      el("span", {}, "Tab Baru")
+    );
+    fullTabBtn.addEventListener("click", () => {
+      opts.onOpenFullTab!();
+    });
+    topBar.prepend(fullTabBtn);
+  }
 
   const title = el("h1", {}, t.title);
   const subtitle = el("p", { className: "subtitle" }, t.subtitle);
@@ -939,16 +959,21 @@ export function mountApp(
     const label = checkLabel;
     btn.addEventListener("click", async () => {
       btn.disabled = true;
+      btn.replaceChildren(spinner("icon spinner"), label);
       label.textContent = t.checking;
       try {
         const { followers, following } = await run((text) => {
-          label.textContent = `${t.checking} ${text}`;
+          label.textContent = text;
         });
         show(followers, following);
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
       } catch (e) {
         fail(e);
       } finally {
         btn.disabled = false;
+        btn.replaceChildren(icon("refresh"), label);
         label.textContent = t.check;
       }
     });

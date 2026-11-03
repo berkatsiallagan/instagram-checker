@@ -67,7 +67,9 @@ async function fetchList(
 
     const parsed = parseApiPage(await res.json());
     parsed.usernames.forEach((n) => names.add(n));
-    report(`${kind} ${names.size}`);
+    const stage = kind === "followers" ? "1/2" : "2/2";
+    const stageLabel = kind === "followers" ? "Followers" : "Following";
+    report(`Tahap ${stage}: ${stageLabel} (${names.size})`);
 
     if (!parsed.nextMaxId) return [...names];
     maxId = parsed.nextMaxId;
@@ -100,8 +102,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   running = true;
   (async () => {
     try {
+      report("Tahap 1/2: Memeriksa followers...");
       const followers = await fetchList("followers", userId, csrf);
       await sleep(jitter());
+      report("Tahap 2/2: Memeriksa following...");
       const following = await fetchList("following", userId, csrf);
       sendResponse({ ok: true, followers, following });
     } catch (e) {

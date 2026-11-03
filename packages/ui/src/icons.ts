@@ -47,3 +47,35 @@ export function icon(name: IconName, className = "icon"): SVGSVGElement {
   svg.append(path);
   return svg;
 }
+
+/** Buat SVG animasi spinner loading tanpa CSS keyframes (sesuai standar anti-slop). */
+export function spinner(className = "icon spinner"): SVGSVGElement {
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2.5");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("class", className);
+
+  const circle = document.createElementNS(NS, "circle");
+  circle.setAttribute("cx", "12");
+  circle.setAttribute("cy", "12");
+  circle.setAttribute("r", "9");
+  circle.setAttribute("stroke-opacity", "0.25");
+
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("d", "M12 3a9 9 0 0 1 9 9");
+
+  const anim = document.createElementNS(NS, "animateTransform");
+  anim.setAttribute("attributeName", "transform");
+  anim.setAttribute("type", "rotate");
+  anim.setAttribute("from", "0 12 12");
+  anim.setAttribute("to", "360 12 12");
+  anim.setAttribute("dur", "0.75s");
+  anim.setAttribute("repeatCount", "indefinite");
+
+  path.append(anim);
+  svg.append(circle, path);
+  return svg;
+}

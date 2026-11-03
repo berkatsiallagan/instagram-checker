@@ -42,4 +42,9 @@ async function check(
   }
 }
 
-mountApp(document.getElementById("root") as HTMLElement, { onCheck: check });
+mountApp(document.getElementById("root") as HTMLElement, {
+  onCheck: check,
+  onOpenFullTab: () => {
+    void chrome.tabs.create({ url: chrome.runtime.getURL("popup.html") });
+  },
+});
