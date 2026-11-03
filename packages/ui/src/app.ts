@@ -1,4 +1,4 @@
-import { ParseError, diff, parseFiles, toCsv, type Result } from "@follback/core";
+import { ParseError, diff, parseFiles, toCsv, type Result, type ExtraCategoryKey } from "@follback/core";
 import {
   AUTHOR_NAME,
   AUTHOR_URL,
@@ -291,6 +291,14 @@ export function mountApp(
     notFollowingBack: t.tabNot,
     fans: t.tabFans,
     mutual: t.tabMutual,
+    pendingRequests: t.tabPendingRequests,
+    recentlyUnfollowed: t.tabRecentlyUnfollowed,
+    closeFriends: t.tabCloseFriends,
+    blockedProfiles: t.tabBlockedProfiles,
+    restrictedProfiles: t.tabRestrictedProfiles,
+    hideStoryFrom: t.tabHideStoryFrom,
+    recentRequests: t.tabRecentRequests,
+    removedSuggestions: t.tabRemovedSuggestions,
   };
 
   function getHistoryDiff(currentFollowers: string[]): { hasPrev: boolean; lost: string[] } {
@@ -402,12 +410,20 @@ export function mountApp(
   function renderTabs(): void {
     if (!result) return;
     const current = result;
+    const allKeys = Object.keys(labels) as TabKey[];
+    const activeKeys = allKeys.filter((key) => {
+      if (key === "notFollowingBack" || key === "fans" || key === "mutual") return true;
+      const list = current[key];
+      return Array.isArray(list) && list.length > 0;
+    });
+
     tabs.replaceChildren(
-      ...(Object.keys(labels) as TabKey[]).map((key) => {
+      ...activeKeys.map((key) => {
+        const count = current[key]?.length ?? 0;
         const b = el(
           "button",
           { type: "button", className: "tab" },
-          `${labels[key]} (${current[key].length})`
+          `${labels[key]} (${count})`
         );
         b.setAttribute("role", "tab");
         b.setAttribute("aria-selected", String(key === tab));
@@ -423,7 +439,8 @@ export function mountApp(
   function renderList(): void {
     if (!result) return;
     const q = query.trim().toLowerCase();
-    let names = result[tab].filter((n) => !q || n.includes(q));
+    const currentList = result[tab] ?? [];
+    let names = currentList.filter((n) => !q || n.includes(q));
     if (sortMode === "az") {
       names = [...names].sort((a, b) => a.localeCompare(b));
     } else if (sortMode === "za") {
@@ -503,13 +520,17 @@ export function mountApp(
     renderError();
   }
 
-  function show(followers: Set<string>, following: Set<string>): void {
+  function show(
+    followers: Set<string>,
+    following: Set<string>,
+    extras: Partial<Record<ExtraCategoryKey, Set<string>>> = {}
+  ): void {
     lastError = null;
     const fList = Array.from(followers);
     const gList = Array.from(following);
     rawFollowers = fList;
     rawFollowing = gList;
-    result = diff(followers, following);
+    result = diff(followers, following, extras);
     tab = "notFollowingBack";
     query = "";
     searchInput.value = "";
@@ -523,10 +544,10 @@ export function mountApp(
     render();
   }
 
-  function handleTexts(texts: string[]): void {
+  function handleTexts(items: (string | { name?: string; text: string })[]): void {
     try {
-      const { followers, following } = parseFiles(texts);
-      show(followers, following);
+      const { followers, following, extras } = parseFiles(items);
+      show(followers, following, extras);
     } catch (e) {
       fail(e);
     }
@@ -603,7 +624,13 @@ export function mountApp(
     );
     const targetFiles = jsonFiles.length > 0 ? jsonFiles : arr;
     try {
-      handleTexts(await Promise.all(targetFiles.map((f) => f.text())));
+      const parsedItems = await Promise.all(
+        targetFiles.map(async (f) => ({
+          name: f.name,
+          text: await f.text(),
+        }))
+      );
+      handleTexts(parsedItems);
     } catch (e) {
       fail(e);
     }

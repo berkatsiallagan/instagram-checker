@@ -83,7 +83,7 @@ describe("parseFiles", () => {
     expect(() => parseFiles(["xx"])).toThrow(ParseError);
   });
 
-  it("mengabaikan file lain di dalam folder export Instagram", () => {
+  it("mengabaikan file lain di dalam folder export Instagram jika tidak dikenali", () => {
     const otherJson = { some_other_data: [1, 2, 3] };
     const { followers, following } = parseFiles([
       JSON.stringify(followersJson),
@@ -92,6 +92,27 @@ describe("parseFiles", () => {
     ]);
     expect([...followers].sort()).toEqual(["alice", "bob"]);
     expect([...following].sort()).toEqual(["bob", "carol"]);
+  });
+
+  it("membaca kategori tambahan dari nama file dan key Instagram", () => {
+    const pendingJson = {
+      relationships_permanent_follow_requests: [
+        { title: "pending_user", string_list_data: [{ value: "pending_user" }] },
+      ],
+    };
+    const { followers, following, extras } = parseFiles([
+      { name: "followers_1.json", text: JSON.stringify(followersJson) },
+      { name: "following.json", text: JSON.stringify(followingJson) },
+      { name: "pending_follow_requests.json", text: JSON.stringify(pendingJson) },
+    ]);
+    expect([...followers].sort()).toEqual(["alice", "bob"]);
+    expect([...following].sort()).toEqual(["bob", "carol"]);
+    expect([...(extras.pendingRequests ?? [])]).toEqual(["pending_user"]);
+
+    const res = diff(followers, following, extras);
+    expect(res.pendingRequests).toEqual(["pending_user"]);
+    const csv = toCsv(res);
+    expect(csv).toContain("pending_user,permintaan_tertunda");
   });
 });
 

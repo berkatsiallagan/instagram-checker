@@ -16,6 +16,14 @@ export interface Strings {
   tabNot: string;
   tabFans: string;
   tabMutual: string;
+  tabPendingRequests: string;
+  tabRecentlyUnfollowed: string;
+  tabCloseFriends: string;
+  tabBlockedProfiles: string;
+  tabRestrictedProfiles: string;
+  tabHideStoryFrom: string;
+  tabRecentRequests: string;
+  tabRemovedSuggestions: string;
   search: string;
   profile: string;
   exportCsv: string;
@@ -60,6 +68,14 @@ const en: Strings = {
   tabNot: "Not following back",
   tabFans: "Fans",
   tabMutual: "Mutual",
+  tabPendingRequests: "Pending requests",
+  tabRecentlyUnfollowed: "Recently unfollowed",
+  tabCloseFriends: "Close friends",
+  tabBlockedProfiles: "Blocked",
+  tabRestrictedProfiles: "Restricted",
+  tabHideStoryFrom: "Hide story from",
+  tabRecentRequests: "Recent requests",
+  tabRemovedSuggestions: "Dismissed suggestions",
   search: "Search username",
   profile: "Open profile",
   exportCsv: "Export CSV",
@@ -117,6 +133,14 @@ const id: Strings = {
   tabNot: "Tidak follback",
   tabFans: "Fans",
   tabMutual: "Mutual",
+  tabPendingRequests: "Permintaan tertunda",
+  tabRecentlyUnfollowed: "Baru di-unfollow",
+  tabCloseFriends: "Teman dekat",
+  tabBlockedProfiles: "Diblokir",
+  tabRestrictedProfiles: "Dibatasi",
+  tabHideStoryFrom: "Sembunyikan cerita",
+  tabRecentRequests: "Permintaan baru",
+  tabRemovedSuggestions: "Saran dihapus",
   search: "Cari username",
   profile: "Buka profil",
   exportCsv: "Ekspor CSV",
