@@ -6,7 +6,7 @@ Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-16%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
+[![Tests](https://img.shields.io/badge/tests-29%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
 [![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)

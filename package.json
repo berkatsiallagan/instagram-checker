@@ -5,8 +5,7 @@
   "license": "MIT",
   "workspaces": ["packages/*", "apps/*"],
   "scripts": {
-    "test": "vitest run",
-    "lint:slop": "node scripts/lint-slop.mjs"
+    "test": "vitest run"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
