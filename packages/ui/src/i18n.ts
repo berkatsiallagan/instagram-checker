@@ -27,6 +27,19 @@ export interface Strings {
   guideStep1: string;
   guideStep2: string;
   guideStep3: string;
+  sortDefault: string;
+  sortAz: string;
+  sortZa: string;
+  statsFollowing: string;
+  statsFollowers: string;
+  statsNotFollback: string;
+  statsMutual: string;
+  statsRate: string;
+  historyTitle: string;
+  historyNewUnfollowers: string;
+  historyNone: string;
+  historySaved: string;
+  historyClear: string;
   errors: Record<ParseErrorCode, string>;
 }
 
@@ -58,6 +71,19 @@ const en: Strings = {
     "Select Some of your information, check Followers and following, and choose JSON format.",
   guideStep3:
     "Once the file is ready, download and extract the zip archive. Drag followers_1.json and following.json here.",
+  sortDefault: "Default order",
+  sortAz: "Username (A - Z)",
+  sortZa: "Username (Z - A)",
+  statsFollowing: "Following",
+  statsFollowers: "Followers",
+  statsNotFollback: "Not following back",
+  statsMutual: "Mutual",
+  statsRate: "Followback rate",
+  historyTitle: "Local comparison history",
+  historyNewUnfollowers: "New unfollowers since last check",
+  historyNone: "No new unfollowers detected since last check.",
+  historySaved: "Last check saved in your browser.",
+  historyClear: "Clear history",
   errors: {
     unknown_format:
       "Unrecognized JSON format. Use followers_1.json or following.json from the Instagram export.",
@@ -98,6 +124,19 @@ const id: Strings = {
     "Pilih Beberapa informasi Anda, centang Pengikut dan mengikuti (Followers & following), lalu pilih format JSON.",
   guideStep3:
     "Setelah file siap, unduh dan ekstrak arsip zip. Masukkan file followers_1.json dan following.json ke sini.",
+  sortDefault: "Urutan default",
+  sortAz: "Username (A - Z)",
+  sortZa: "Username (Z - A)",
+  statsFollowing: "Mengikuti",
+  statsFollowers: "Pengikut",
+  statsNotFollback: "Tidak follback",
+  statsMutual: "Mutual",
+  statsRate: "Rasio follback",
+  historyTitle: "Riwayat perbandingan lokal",
+  historyNewUnfollowers: "Unfollower baru sejak cek terakhir",
+  historyNone: "Tidak ada unfollower baru sejak pengecekan terakhir.",
+  historySaved: "Cek terakhir tersimpan di browser.",
+  historyClear: "Hapus riwayat",
   errors: {
     unknown_format:
       "Format JSON tidak dikenal. Pakai followers_1.json atau following.json dari export Instagram.",

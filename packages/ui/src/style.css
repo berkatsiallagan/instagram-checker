@@ -275,6 +275,95 @@ a {
   margin-top: 24px;
 }
 
+.stats-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  padding: 10px 4px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.stat-card.highlight {
+  border-color: var(--accent);
+}
+
+.stat-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.stat-card.highlight .stat-val {
+  color: var(--accent);
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.history-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  margin-bottom: 16px;
+  font-size: 13px;
+  background: var(--bg);
+}
+
+.history-card.alert {
+  border-color: var(--err);
+  color: var(--err);
+}
+
+.history-card.alert .history-list {
+  display: block;
+  font-weight: 500;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.history-card.ok {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.filter-row .searchbox {
+  flex: 1;
+  margin: 0;
+}
+
+.sort-select {
+  font: inherit;
+  font-size: 13px;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 .tabs {
   display: flex;
   border-bottom: 1px solid var(--line);

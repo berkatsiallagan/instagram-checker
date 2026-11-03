@@ -19,11 +19,16 @@ export interface MountOptions {
   showWarning?: boolean;
 }
 
+export type SortMode = "default" | "az" | "za";
+
 export interface AppState {
   result?: Result | null;
   tab?: TabKey;
   query?: string;
   error?: unknown;
+  sortMode?: SortMode;
+  rawFollowers?: string[];
+  rawFollowing?: string[];
 }
 
 type TabKey = keyof Result;
@@ -47,6 +52,14 @@ function externalLink(href: string, ...children: (Node | string)[]): HTMLAnchorE
   );
 }
 
+const SNAPSHOT_KEY = "instagram-checker-snapshot";
+
+interface Snapshot {
+  time: number;
+  followers: string[];
+  following: string[];
+}
+
 export function mountApp(
   root: HTMLElement,
   opts: MountOptions = {},
@@ -61,6 +74,9 @@ export function mountApp(
   let tab: TabKey = state.tab ?? "notFollowingBack";
   let query = state.query ?? "";
   let lastError: unknown = state.error ?? null;
+  let sortMode: SortMode = state.sortMode ?? "default";
+  let rawFollowers: string[] | null = state.rawFollowers ?? null;
+  let rawFollowing: string[] | null = state.rawFollowing ?? null;
 
   // Language selector
   const langSelect = el(
@@ -76,7 +92,15 @@ export function mountApp(
   langSelect.addEventListener("change", () => {
     const nextLang = langSelect.value as Lang;
     saveLang(nextLang);
-    mountApp(root, opts, { result, tab, query, error: lastError });
+    mountApp(root, opts, {
+      result,
+      tab,
+      query,
+      error: lastError,
+      sortMode,
+      rawFollowers: rawFollowers ?? undefined,
+      rawFollowing: rawFollowing ?? undefined,
+    });
   });
 
   const topBar = el(
@@ -136,6 +160,9 @@ export function mountApp(
     checkBtn = el("button", { className: "primary", type: "button" }, icon("refresh"), checkLabel);
   }
 
+  const historyBox = el("div", { className: "history-box" });
+  const statsBox = el("div", { className: "stats-box" });
+
   const tabs = el("div", { className: "tabs" });
   tabs.setAttribute("role", "tablist");
 
@@ -148,6 +175,22 @@ export function mountApp(
   searchInput.setAttribute("aria-label", t.search);
   const searchBox = el("div", { className: "searchbox" }, icon("search"), searchInput);
 
+  const sortSelect = el(
+    "select",
+    { className: "sort-select" },
+    el("option", { value: "default" }, t.sortDefault),
+    el("option", { value: "az" }, t.sortAz),
+    el("option", { value: "za" }, t.sortZa)
+  );
+  sortSelect.setAttribute("aria-label", t.sortDefault);
+  sortSelect.value = sortMode;
+  sortSelect.addEventListener("change", () => {
+    sortMode = sortSelect.value as SortMode;
+    renderList();
+  });
+
+  const filterRow = el("div", { className: "filter-row" }, searchBox, sortSelect);
+
   const exportBtn = el(
     "button",
     { className: "link", type: "button" },
@@ -155,7 +198,16 @@ export function mountApp(
     t.exportCsv
   );
   const list = el("ul", { className: "list" });
-  const section = el("section", { className: "results" }, tabs, searchBox, list, exportBtn);
+  const section = el(
+    "section",
+    { className: "results" },
+    historyBox,
+    statsBox,
+    tabs,
+    filterRow,
+    list,
+    exportBtn
+  );
   section.hidden = result === null;
 
   const footer = el(
@@ -190,6 +242,112 @@ export function mountApp(
     mutual: t.tabMutual,
   };
 
+  function getHistoryDiff(currentFollowers: string[]): { hasPrev: boolean; lost: string[] } {
+    try {
+      const raw = localStorage.getItem(SNAPSHOT_KEY);
+      if (!raw) return { hasPrev: false, lost: [] };
+      const snap: Snapshot = JSON.parse(raw);
+      if (!Array.isArray(snap?.followers)) return { hasPrev: false, lost: [] };
+      const currSet = new Set(currentFollowers);
+      const lost = snap.followers.filter((u) => !currSet.has(u));
+      return { hasPrev: true, lost };
+    } catch {
+      return { hasPrev: false, lost: [] };
+    }
+  }
+
+  function saveSnapshot(followers: string[], following: string[]): void {
+    try {
+      const snap: Snapshot = {
+        time: Date.now(),
+        followers,
+        following,
+      };
+      localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snap));
+    } catch {
+      // ignore
+    }
+  }
+
+  function renderHistory(): void {
+    if (!rawFollowers) {
+      historyBox.replaceChildren();
+      return;
+    }
+    const { hasPrev, lost } = getHistoryDiff(rawFollowers);
+    if (!hasPrev) {
+      historyBox.replaceChildren();
+      return;
+    }
+    if (lost.length > 0) {
+      historyBox.replaceChildren(
+        el(
+          "div",
+          { className: "history-card alert" },
+          icon("history"),
+          el(
+            "div",
+            { className: "history-info" },
+            el("strong", {}, `${t.historyNewUnfollowers} (${lost.length}): `),
+            el("span", { className: "history-list" }, lost.join(", "))
+          )
+        )
+      );
+    } else {
+      historyBox.replaceChildren(
+        el(
+          "div",
+          { className: "history-card ok" },
+          icon("history"),
+          el("span", {}, t.historyNone)
+        )
+      );
+    }
+  }
+
+  function renderStats(): void {
+    if (!result || !rawFollowers || !rawFollowing) {
+      statsBox.replaceChildren();
+      return;
+    }
+    const followingCount = rawFollowing.length;
+    const followersCount = rawFollowers.length;
+    const rate = followingCount > 0 ? Math.round((result.mutual.length / followingCount) * 100) : 0;
+
+    statsBox.replaceChildren(
+      el(
+        "div",
+        { className: "stat-card" },
+        el("span", { className: "stat-val" }, String(followingCount)),
+        el("span", { className: "stat-lbl" }, t.statsFollowing)
+      ),
+      el(
+        "div",
+        { className: "stat-card" },
+        el("span", { className: "stat-val" }, String(followersCount)),
+        el("span", { className: "stat-lbl" }, t.statsFollowers)
+      ),
+      el(
+        "div",
+        { className: "stat-card" },
+        el("span", { className: "stat-val" }, String(result.notFollowingBack.length)),
+        el("span", { className: "stat-lbl" }, t.statsNotFollback)
+      ),
+      el(
+        "div",
+        { className: "stat-card" },
+        el("span", { className: "stat-val" }, String(result.mutual.length)),
+        el("span", { className: "stat-lbl" }, t.statsMutual)
+      ),
+      el(
+        "div",
+        { className: "stat-card highlight" },
+        el("span", { className: "stat-val" }, `${rate}%`),
+        el("span", { className: "stat-lbl" }, t.statsRate)
+      )
+    );
+  }
+
   function renderTabs(): void {
     if (!result) return;
     const current = result;
@@ -214,7 +372,12 @@ export function mountApp(
   function renderList(): void {
     if (!result) return;
     const q = query.trim().toLowerCase();
-    const names = result[tab].filter((n) => !q || n.includes(q));
+    let names = result[tab].filter((n) => !q || n.includes(q));
+    if (sortMode === "az") {
+      names = [...names].sort((a, b) => a.localeCompare(b));
+    } else if (sortMode === "za") {
+      names = [...names].sort((a, b) => b.localeCompare(a));
+    }
     if (names.length === 0) {
       list.replaceChildren(el("li", { className: "empty" }, t.empty));
       return;
@@ -248,6 +411,8 @@ export function mountApp(
 
   function render(): void {
     section.hidden = result === null;
+    renderHistory();
+    renderStats();
     renderTabs();
     renderList();
     renderError();
@@ -255,11 +420,16 @@ export function mountApp(
 
   function show(followers: Set<string>, following: Set<string>): void {
     lastError = null;
+    const fList = Array.from(followers);
+    const gList = Array.from(following);
+    rawFollowers = fList;
+    rawFollowing = gList;
     result = diff(followers, following);
     tab = "notFollowingBack";
     query = "";
     searchInput.value = "";
     render();
+    saveSnapshot(fList, gList);
   }
 
   function fail(e: unknown): void {
