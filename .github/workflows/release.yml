@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build --workspace @follback/extension
+      - run: npm run build:firefox --workspace @follback/extension
+      - name: Zip extensions
+        run: |
+          cd apps/extension/dist/chrome && zip -r ../../../../follback-checker-chrome.zip .
+          cd ../firefox && zip -r ../../../../follback-checker-firefox.zip .
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            follback-checker-chrome.zip
+            follback-checker-firefox.zip
+          generate_release_notes: true

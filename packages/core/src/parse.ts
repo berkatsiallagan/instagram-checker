@@ -123,6 +123,34 @@ export function parseFiles(texts: string[]): {
   return { followers, following };
 }
 
+export interface ApiPage {
+  usernames: string[];
+  nextMaxId: string | null;
+}
+
+/** Parse satu halaman respons endpoint friendships Instagram (followers atau following). */
+export function parseApiPage(data: unknown): ApiPage {
+  if (!data || typeof data !== "object") {
+    throw new ParseError("Respons Instagram tidak valid.");
+  }
+  const rec = data as Record<string, unknown>;
+  if (!Array.isArray(rec.users)) {
+    throw new ParseError("Respons Instagram tidak berisi daftar pengguna.");
+  }
+  const usernames: string[] = [];
+  for (const u of rec.users) {
+    const name =
+      u && typeof u === "object"
+        ? nonEmptyString((u as Record<string, unknown>).username)
+        : "";
+    if (name) usernames.push(normalizeUsername(name));
+  }
+  const next = rec.next_max_id;
+  const nextMaxId =
+    typeof next === "string" && next ? next : typeof next === "number" ? String(next) : null;
+  return { usernames, nextMaxId };
+}
+
 /** Sama seperti parseUsernames, tapi menerima teks mentah file. */
 export function parseText(text: string): Set<string> {
   let data: unknown;

@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Follback Checker",
+  "version": "0.1.0",
+  "description": "Check who does not follow you back on Instagram. Runs entirely in your browser.",
+  "action": {
+    "default_title": "Follback Checker",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": ["https://www.instagram.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'"
+  }
+}

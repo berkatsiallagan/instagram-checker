@@ -179,3 +179,13 @@ a {
   color: var(--muted);
   font-size: 13px;
 }
+
+.popup main {
+  width: 420px;
+  padding: 16px;
+}
+
+.popup h1 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}

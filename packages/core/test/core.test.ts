@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ParseError,
   diff,
+  parseApiPage,
   parseFiles,
   parseText,
   parseUsernames,
@@ -80,6 +81,26 @@ describe("parseFiles", () => {
 
   it("gagal pada teks bukan JSON", () => {
     expect(() => parseFiles(["xx"])).toThrow(ParseError);
+  });
+});
+
+describe("parseApiPage", () => {
+  it("membaca users dan next_max_id", () => {
+    const page = parseApiPage({
+      users: [{ username: "Ann" }, { username: "" }, { pk: 1 }, { username: "bo" }],
+      next_max_id: "abc",
+    });
+    expect(page.usernames).toEqual(["ann", "bo"]);
+    expect(page.nextMaxId).toBe("abc");
+  });
+
+  it("nextMaxId null di halaman terakhir", () => {
+    expect(parseApiPage({ users: [] }).nextMaxId).toBeNull();
+  });
+
+  it("menolak respons tanpa users", () => {
+    expect(() => parseApiPage({ status: "fail" })).toThrow(ParseError);
+    expect(() => parseApiPage(null)).toThrow(ParseError);
   });
 });
 

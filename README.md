@@ -6,7 +6,7 @@ Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-13%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
+[![Tests](https://img.shields.io/badge/tests-16%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
 [![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
@@ -113,15 +113,15 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 |---|---|
 | Core (parser, diff, CSV) and tests | Done |
 | Shared UI and website | Implemented, build not yet verified |
-| Extension | Not started |
+| Extension | Implemented, not yet tested against live Instagram |
 
 ## Roadmap
 
 - [x] Core parser, diff, and CSV export
 - [x] Shared UI (single field, no decoration)
 - [ ] Static website on Cloudflare Pages
-- [ ] Extension, JSON mode
-- [ ] Extension, direct read from logged-in session
+- [x] Extension, JSON mode
+- [x] Extension, direct read from logged-in session (needs live testing)
 - [ ] Release on GitHub Releases, Firefox Add-ons, and Edge Add-ons
 
 ## Contributing
@@ -205,15 +205,15 @@ npm test
 |---|---|
 | Core (parser, diff, CSV) dan test | Selesai |
 | UI bersama dan website | Sudah ditulis, build belum diverifikasi |
-| Extension | Belum dimulai |
+| Extension | Sudah ditulis, belum diuji ke Instagram asli |
 
 ## Roadmap
 
 - [x] Core parser, diff, dan ekspor CSV
 - [x] UI bersama (satu field, tanpa dekorasi)
 - [ ] Website statis di Cloudflare Pages
-- [ ] Extension mode JSON
-- [ ] Extension mode baca langsung dari sesi login
+- [x] Extension mode JSON
+- [x] Extension mode baca langsung dari sesi login (perlu diuji langsung)
 - [ ] Rilis di GitHub Releases, Firefox Add-ons, dan Edge Add-ons
 
 ## Kontribusi

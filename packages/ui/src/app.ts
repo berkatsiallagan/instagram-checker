@@ -4,7 +4,9 @@ import { sampleFiles } from "./sample";
 
 export interface MountOptions {
   /** Jika ada, tampilkan tombol Cek yang memanggil fungsi ini (dipakai extension). */
-  onCheck?: () => Promise<{ followers: Set<string>; following: Set<string> }>;
+  onCheck?: (
+    progress: (text: string) => void
+  ) => Promise<{ followers: Set<string>; following: Set<string> }>;
   /** Teks peringatan tambahan di bawah tombol Cek. */
   showWarning?: boolean;
 }
@@ -225,7 +227,9 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
       btn.disabled = true;
       btn.textContent = t.checking;
       try {
-        const { followers, following } = await run();
+        const { followers, following } = await run((text) => {
+          btn.textContent = `${t.checking} ${text}`;
+        });
         show(followers, following);
       } catch (e) {
         fail(e);
