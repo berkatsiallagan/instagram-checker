@@ -213,7 +213,12 @@ export function mountApp(
   const footer = el(
     "footer",
     { className: "footer" },
-    el("p", { className: "privacy" }, icon("lock"), t.privacy),
+    el(
+      "p",
+      { className: "privacy" },
+      icon("lock"),
+      el("span", { className: "privacy-text" }, t.privacy)
+    ),
     el("p", {}, `\u00a9 ${YEAR} Instagram Checker. v${VERSION}`),
     el(
       "p",
