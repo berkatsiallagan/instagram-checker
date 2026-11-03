@@ -30,17 +30,34 @@ interface Entry {
 
 const LIST_KEYS = [
   "relationships_following",
+  "following",
   "relationships_followers",
+  "followers",
   "relationships_permanent_follow_requests",
   "relationships_persistent_follow_requests",
   "relationships_follow_requests_sent",
+  "pending_follow_requests",
   "relationships_follow_requests_received",
+  "recent_follow_requests",
   "relationships_unfollowed_users",
+  "recently_unfollowed_profiles",
+  "recently_unfollowed_accounts",
   "relationships_close_friends",
+  "close_friends",
   "relationships_blocked_users",
+  "blocked_profiles",
+  "blocked_accounts",
   "relationships_restricted_users",
+  "restricted_profiles",
+  "restricted_accounts",
   "relationships_hide_stories_from",
+  "relationships_hide_story_from",
+  "hide_stories_from",
+  "hide_story_from",
   "relationships_dismissed_suggested_users",
+  "dismissed_suggested_users",
+  "removed_suggestions",
+  "suggested_users",
 ];
 
 export function normalizeUsername(raw: string): string {
@@ -67,19 +84,81 @@ function usernameFromEntry(entry: Entry | unknown): string {
 
   const rec = entry as Record<string, unknown>;
 
-  const title = nonEmptyString(rec.title);
-  if (title && !title.includes(" ") && !title.includes("/")) {
-    return normalizeUsername(title);
+  // 1. Direct label: "Username" dan value: "..."
+  const directLabel = nonEmptyString(rec.label).toLowerCase();
+  const directVal = nonEmptyString(rec.value);
+  if (directLabel.includes("user") && directVal) {
+    return normalizeUsername(directVal);
   }
 
+  // 2. string_map_data (banyak digunakan di export Meta Accounts Center untuk pending requests, dismissed suggestions, dll.)
+  if (rec.string_map_data && typeof rec.string_map_data === "object") {
+    if (Array.isArray(rec.string_map_data)) {
+      for (const item of rec.string_map_data) {
+        if (item && typeof item === "object") {
+          const itemRec = item as Record<string, unknown>;
+          const lbl = nonEmptyString(itemRec.label).toLowerCase();
+          const val = nonEmptyString(itemRec.value);
+          if (lbl.includes("user") && val) return normalizeUsername(val);
+          if (val && !val.includes(" ") && !val.includes("/")) return normalizeUsername(val);
+          const href = nonEmptyString(itemRec.href);
+          if (href) {
+            const u = usernameFromHref(href);
+            if (u) return normalizeUsername(u);
+          }
+        }
+      }
+    } else {
+      const mapObj = rec.string_map_data as Record<string, unknown>;
+      // Prioritas 1: cari key objek yang mengandung kata "user", "account", "profile"
+      for (const [key, mapItem] of Object.entries(mapObj)) {
+        const kLower = key.toLowerCase();
+        if (kLower.includes("user") || kLower.includes("account") || kLower.includes("profile")) {
+          if (mapItem && typeof mapItem === "object") {
+            const mRec = mapItem as Record<string, unknown>;
+            const val = nonEmptyString(mRec.value);
+            if (val) return normalizeUsername(val);
+            const href = nonEmptyString(mRec.href);
+            if (href) {
+              const u = usernameFromHref(href);
+              if (u) return normalizeUsername(u);
+            }
+          } else if (typeof mapItem === "string" && mapItem && !mapItem.includes(" ") && !mapItem.includes("/")) {
+            return normalizeUsername(mapItem);
+          }
+        }
+      }
+      // Prioritas 2: cek semua key lain di dalam string_map_data
+      for (const [, mapItem] of Object.entries(mapObj)) {
+        if (mapItem && typeof mapItem === "object") {
+          const mRec = mapItem as Record<string, unknown>;
+          const lbl = nonEmptyString(mRec.label).toLowerCase();
+          const val = nonEmptyString(mRec.value);
+          if (lbl.includes("user") && val) return normalizeUsername(val);
+          if (val && !val.includes(" ") && !val.includes("/")) return normalizeUsername(val);
+          const href = nonEmptyString(mRec.href);
+          if (href) {
+            const u = usernameFromHref(href);
+            if (u) return normalizeUsername(u);
+          }
+        } else if (typeof mapItem === "string" && !mapItem.includes(" ") && !mapItem.includes("/")) {
+          return normalizeUsername(mapItem);
+        }
+      }
+    }
+  }
+
+  // 3. string_list_data (format followers_1.json, following.json, dll.)
   const items = Array.isArray(rec.string_list_data)
     ? (rec.string_list_data as StringListItem[])
     : [];
   for (const item of items) {
     if (item && typeof item === "object") {
       const itemRec = item as Record<string, unknown>;
+      const lbl = nonEmptyString(itemRec.label).toLowerCase();
       const val = nonEmptyString(itemRec.value);
-      if (val) return normalizeUsername(val);
+      if (lbl.includes("user") && val) return normalizeUsername(val);
+      if (val && !val.includes(" ") && !val.includes("/")) return normalizeUsername(val);
       const href = nonEmptyString(itemRec.href);
       if (href) {
         const u = usernameFromHref(href);
@@ -88,21 +167,32 @@ function usernameFromEntry(entry: Entry | unknown): string {
     }
   }
 
-  const val = nonEmptyString(rec.value);
-  if (val) return normalizeUsername(val);
+  // 4. Title (khusus format following.json di mana title adalah username)
+  const title = nonEmptyString(rec.title);
+  if (title && !title.includes(" ") && !title.includes("/")) {
+    return normalizeUsername(title);
+  }
 
+  // 5. Direct value jika ada dan bukan kalimat/frase panjang
+  if (directVal && !directVal.includes(" ") && !directVal.includes("/")) {
+    return normalizeUsername(directVal);
+  }
+
+  // 6. Direct username / name
   const u = nonEmptyString(rec.username);
   if (u) return normalizeUsername(u);
 
   const name = nonEmptyString(rec.name);
   if (name && !name.includes(" ") && !name.includes("/")) return normalizeUsername(name);
 
+  // 7. Direct href
   const href = nonEmptyString(rec.href);
   if (href) {
     const fromHref = usernameFromHref(href);
     if (fromHref) return normalizeUsername(fromHref);
   }
 
+  // 8. Fallback title
   if (title) return normalizeUsername(title);
 
   return "";
@@ -112,13 +202,28 @@ function extractEntries(data: unknown): Entry[] {
   if (Array.isArray(data)) return data as Entry[];
   if (data && typeof data === "object") {
     const rec = data as Record<string, unknown>;
+    // Prioritaskan LIST_KEYS yang punya elemen
+    for (const key of LIST_KEYS) {
+      const list = rec[key];
+      if (Array.isArray(list) && list.length > 0) return list as Entry[];
+    }
+    // Jika tidak ada yang length > 0, cek LIST_KEYS yang berupa array (meski kosong)
     for (const key of LIST_KEYS) {
       const list = rec[key];
       if (Array.isArray(list)) return list as Entry[];
     }
+    // Cari semua array di dalam objek, prioritaskan yang tidak kosong dan bukan media_list_data
+    const allArrays: Entry[][] = [];
     for (const key of Object.keys(rec)) {
-      if (Array.isArray(rec[key])) return rec[key] as Entry[];
+      if (Array.isArray(rec[key])) {
+        const arr = rec[key] as Entry[];
+        if (arr.length > 0 && key !== "media_list_data") {
+          return arr;
+        }
+        allArrays.push(arr);
+      }
     }
+    if (allArrays.length > 0) return allArrays[0];
     if (Object.keys(rec).length === 0) return [];
   }
   throw new ParseError(

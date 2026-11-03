@@ -62,6 +62,40 @@ describe("parseUsernames", () => {
     expect([...parseUsernames(["john", "doe"])].sort()).toEqual(["doe", "john"]);
   });
 
+  it("membaca format string_map_data (Meta Accounts Center export)", () => {
+    const data = [
+      {
+        title: "",
+        media_list_data: [],
+        string_list_data: [],
+        string_map_data: {
+          Username: {
+            href: "https://www.instagram.com/alice",
+            value: "Alice",
+            timestamp: 123456,
+          },
+        },
+      },
+      {
+        title: "",
+        string_map_data: {
+          "User Name": {
+            value: "Bob",
+          },
+        },
+      },
+    ];
+    expect([...parseUsernames(data)].sort()).toEqual(["alice", "bob"]);
+  });
+
+  it("membaca format label: Username dan value langsung", () => {
+    const data = [
+      { label: "Username", value: "target_user_1" },
+      { label: "User", value: "target_user_2" },
+    ];
+    expect([...parseUsernames(data)].sort()).toEqual(["target_user_1", "target_user_2"]);
+  });
+
   it("membaca format objek dengan properti username/value/href langsung", () => {
     const data = [
       { username: "user_a" },
@@ -126,6 +160,45 @@ describe("parseFiles", () => {
     expect(res.pendingRequests).toEqual(["pending_user"]);
     const csv = toCsv(res);
     expect(csv).toContain("pending_user,permintaan_tertunda");
+  });
+
+  it("membaca pending requests dan dismissed suggestions dengan string_map_data dan label Username", () => {
+    const pendingJson = {
+      relationships_follow_requests_sent: [
+        {
+          title: "",
+          media_list_data: [],
+          string_list_data: [],
+          string_map_data: {
+            Username: {
+              href: "https://www.instagram.com/pending_guy",
+              value: "pending_guy",
+            },
+          },
+        },
+      ],
+    };
+    const dismissedJson = {
+      relationships_dismissed_suggested_users: [
+        {
+          title: "",
+          string_list_data: [],
+          string_map_data: {
+            Username: {
+              value: "suggested_dude",
+            },
+          },
+        },
+      ],
+    };
+    const { followers, following, extras } = parseFiles([
+      { name: "followers_1.json", text: JSON.stringify(followersJson) },
+      { name: "following.json", text: JSON.stringify(followingJson) },
+      { name: "pending_follow_requests.json", text: JSON.stringify(pendingJson) },
+      { name: "dismissed_suggested_users.json", text: JSON.stringify(dismissedJson) },
+    ]);
+    expect([...(extras.pendingRequests ?? [])]).toEqual(["pending_guy"]);
+    expect([...(extras.removedSuggestions ?? [])]).toEqual(["suggested_dude"]);
   });
 
   it("tetap menyertakan kategori kosong jika filenya diunggah", () => {
