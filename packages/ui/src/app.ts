@@ -427,6 +427,13 @@ export function mountApp(
     "footer",
     { className: "footer" },
     el("p", { className: "privacy" }, icon("lock"), t.privacy),
+    el(
+      "p",
+      { className: "footer-legal-links" },
+      externalLink("https://ig.berkatsiallagan.com/privacy", t.legalPrivacy),
+      externalLink("https://ig.berkatsiallagan.com/terms", t.legalTerms),
+      externalLink("https://github.com/berkatsiallagan/instagram-checker", "GitHub")
+    ),
     el("p", {}, `\u00a9 ${YEAR} Instagram Checker. v${VERSION}`),
     el(
       "p",

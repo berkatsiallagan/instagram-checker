@@ -37,6 +37,8 @@ export interface Strings {
   confirmReset: string;
   empty: string;
   privacy: string;
+  legalPrivacy: string;
+  legalTerms: string;
   warning: string;
   developedBy: string;
   language: string;
@@ -96,6 +98,8 @@ const en: Strings = {
   confirmReset: "Clear all saved analysis and unfollow progress?",
   empty: "Nothing here.",
   privacy: "Runs in your browser. Files never leave your device.",
+  legalPrivacy: "Privacy Policy",
+  legalTerms: "Terms of Service",
   warning:
     "Reading directly from Instagram may get your account rate limited. Use at your own risk.",
   developedBy: "Developed by",
@@ -190,6 +194,8 @@ const id: Strings = {
   confirmReset: "Hapus semua data analisis dan progres unfollow yang tersimpan?",
   empty: "Tidak ada data.",
   privacy: "Privat di browsermu. File tidak keluar dari perangkat.",
+  legalPrivacy: "Kebijakan Privasi",
+  legalTerms: "Syarat & Ketentuan",
   warning:
     "Membaca langsung dari Instagram bisa membuat akunmu kena pembatasan. Risiko ditanggung sendiri.",
   developedBy: "Dikembangkan oleh",

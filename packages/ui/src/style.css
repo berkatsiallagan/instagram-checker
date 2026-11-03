@@ -578,6 +578,25 @@ a {
   font-size: 13px;
 }
 
+.footer-legal-links {
+  margin: 10px 0 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+}
+
+.footer-legal-links a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer-legal-links a:hover {
+  text-decoration: underline;
+}
+
 .popup main {
   width: 420px;
   padding: 16px;
