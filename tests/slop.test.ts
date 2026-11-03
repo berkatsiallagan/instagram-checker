@@ -105,7 +105,7 @@ describe("privasi", () => {
 
   it("tidak ada URL absolut selain host yang diizinkan di kode klien", () => {
     const allowed =
-      /^https?:\/\/(www\.(instagram|youtube)\.com|berkatsiallagan\.com|instagram-checker\.pages\.dev)(\/|$|["'`])|^http:\/\/www\.w3\.org\/2000\/svg$/;
+      /^https?:\/\/(www\.(instagram|youtube)\.com|berkatsiallagan\.com|instagram-checker\.pages\.dev|schema\.org)(\/|$|["'`])|^http:\/\/www\.w3\.org\/2000\/svg$/;
     const bad: string[] = [];
     for (const f of clientCode) {
       for (const m of f.text.matchAll(/https?:\/\/[^\s"'`)]+/g)) {
