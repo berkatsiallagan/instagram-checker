@@ -118,6 +118,44 @@ h1 {
   font-size: 14px;
 }
 
+.guide {
+  margin: 16px 0 0;
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--muted);
+  background: var(--bg);
+}
+
+.guide[open] {
+  color: var(--fg);
+}
+
+.guide-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+.guide-steps {
+  margin: 12px 0 4px;
+  padding-left: 20px;
+  line-height: 1.6;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.guide-steps li {
+  margin-bottom: 6px;
+}
+
+.guide-steps li:last-child {
+  margin-bottom: 0;
+}
+
 .icon {
   width: 1.25em;
   height: 1.25em;

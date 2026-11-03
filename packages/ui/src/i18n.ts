@@ -23,6 +23,10 @@ export interface Strings {
   warning: string;
   developedBy: string;
   language: string;
+  guideTitle: string;
+  guideStep1: string;
+  guideStep2: string;
+  guideStep3: string;
   errors: Record<ParseErrorCode, string>;
 }
 
@@ -47,6 +51,13 @@ const en: Strings = {
     "Reading directly from Instagram may get your account rate limited. Use at your own risk.",
   developedBy: "Developed by",
   language: "Language",
+  guideTitle: "How to get your Instagram JSON files",
+  guideStep1:
+    "In Instagram, open Settings > Accounts Center > Your information and permissions > Download your information.",
+  guideStep2:
+    "Select Some of your information, check Followers and following, and choose JSON format.",
+  guideStep3:
+    "Once the file is ready, download and extract the zip archive. Drag followers_1.json and following.json here.",
   errors: {
     unknown_format:
       "Unrecognized JSON format. Use followers_1.json or following.json from the Instagram export.",
@@ -80,6 +91,13 @@ const id: Strings = {
     "Membaca langsung dari Instagram bisa membuat akunmu kena pembatasan. Risiko ditanggung sendiri.",
   developedBy: "Dikembangkan oleh",
   language: "Bahasa",
+  guideTitle: "Cara mendapatkan file JSON dari Instagram",
+  guideStep1:
+    "Di Instagram, buka Pengaturan > Pusat Akun > Informasi dan izin Anda > Unduh informasi Anda.",
+  guideStep2:
+    "Pilih Beberapa informasi Anda, centang Pengikut dan mengikuti (Followers & following), lalu pilih format JSON.",
+  guideStep3:
+    "Setelah file siap, unduh dan ekstrak arsip zip. Masukkan file followers_1.json dan following.json ke sini.",
   errors: {
     unknown_format:
       "Format JSON tidak dikenal. Pakai followers_1.json atau following.json dari export Instagram.",

@@ -107,6 +107,19 @@ export function mountApp(
   drop.setAttribute("role", "button");
   drop.setAttribute("aria-label", `${t.choose}. ${t.dropHint}`);
 
+  const guide = el(
+    "details",
+    { className: "guide" },
+    el("summary", { className: "guide-summary" }, icon("help"), t.guideTitle),
+    el(
+      "ol",
+      { className: "guide-steps" },
+      el("li", {}, t.guideStep1),
+      el("li", {}, t.guideStep2),
+      el("li", {}, t.guideStep3)
+    )
+  );
+
   const error = el("p", { className: "error" });
   error.setAttribute("role", "alert");
 
@@ -162,7 +175,7 @@ export function mountApp(
     )
   );
 
-  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput];
+  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput, guide];
   if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
   if (actions) children.push(actions);
   if (opts.onCheck && opts.showWarning !== false) {
