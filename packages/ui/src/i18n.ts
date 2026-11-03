@@ -28,6 +28,7 @@ export interface Strings {
   guideStep1: string;
   guideStep2: string;
   guideStep3: string;
+  guideNote: string;
   confirmUnfollow: string;
   unfollowedBadge: string;
   sortDefault: string;
@@ -75,6 +76,8 @@ const en: Strings = {
     "Select Some of your information, check Followers and following, and choose JSON format.",
   guideStep3:
     "Once the file is ready, download and extract the zip archive. Drag followers_1.json and following.json here.",
+  guideNote:
+    "Note: If an account shows 'Something went wrong' on Instagram, the account has been deactivated, deleted, or suspended. Meta still retains old friendships in following.json, which is why they appear under Not following back.",
   confirmUnfollow: "Mark as unfollowed?",
   unfollowedBadge: "Unfollowed",
   sortDefault: "Default order",
@@ -130,6 +133,8 @@ const id: Strings = {
     "Pilih Beberapa informasi Anda, centang Pengikut dan mengikuti (Followers & following), lalu pilih format JSON.",
   guideStep3:
     "Setelah file siap, unduh dan ekstrak arsip zip. Masukkan file followers_1.json dan following.json ke sini.",
+  guideNote:
+    "Catatan: Jika akun bertuliskan 'Something went wrong', akun tersebut telah dinonaktifkan, dihapus, atau dibanned. Meta tetap menyimpan relasi lama di following.json sehingga mereka terdeteksi di daftar Tidak follback.",
   confirmUnfollow: "Tandai sudah unfollow?",
   unfollowedBadge: "Sudah di-unfollow",
   sortDefault: "Urutan default",

@@ -39,6 +39,7 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 html::-webkit-scrollbar,
@@ -52,16 +53,21 @@ body::-webkit-scrollbar,
 main {
   max-width: 640px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
-  padding-top: max(24px, env(safe-area-inset-top, 24px));
+  padding: 16px 16px 48px;
+  padding-top: max(16px, env(safe-area-inset-top, 16px));
   padding-bottom: max(48px, env(safe-area-inset-bottom, 48px));
 }
 
 .top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 16px;
+  padding: 8px 0;
+  margin-bottom: 12px;
 }
 
 .lang-picker {
@@ -182,6 +188,15 @@ h1 {
 
 .guide-steps li:last-child {
   margin-bottom: 0;
+}
+
+.guide-note {
+  margin: 10px 0 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
 }
 
 .icon {

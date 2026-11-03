@@ -172,7 +172,7 @@ export function mountApp(
   // Zona unggah hybrid: bisa klik pilih file, pilih folder, atau drag folder/file langsung.
   const drop = el(
     "div",
-    { className: "drop", tabIndex: 0 },
+    { className: "drop" },
     icon("upload_file", "icon icon-xl"),
     btnRow,
     el("span", { className: "drop-hint" }, t.dropHint)
@@ -190,7 +190,8 @@ export function mountApp(
       el("li", {}, t.guideStep1),
       el("li", {}, t.guideStep2),
       el("li", {}, t.guideStep3)
-    )
+    ),
+    el("p", { className: "guide-note" }, t.guideNote)
   );
 
   const error = el("p", { className: "error" });
@@ -629,10 +630,12 @@ export function mountApp(
     }
   });
   fileInput.addEventListener("change", () => {
+    window.scrollTo({ top: 0, behavior: "instant" });
     if (fileInput.files) void handleFiles(fileInput.files);
     fileInput.value = "";
   });
   folderInput.addEventListener("change", () => {
+    window.scrollTo({ top: 0, behavior: "instant" });
     if (folderInput.files) void handleFiles(folderInput.files);
     folderInput.value = "";
   });
