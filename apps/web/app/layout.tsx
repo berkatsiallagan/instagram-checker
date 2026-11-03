@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Berkat Tua Siallagan", url: "https://berkatsiallagan.com" }],
   creator: "Berkat Tua Siallagan",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "IG Checker",
+  },
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
