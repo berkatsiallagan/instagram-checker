@@ -1,4 +1,4 @@
-# ⚖️ Syarat dan Ketentuan Layanan (Terms of Service) - Instagram Follow Back Checker
+# Syarat dan Ketentuan Layanan (Terms of Service) - Instagram Follow Back Checker
 
 *Terakhir diperbarui: 4 November 2026*
 
@@ -28,7 +28,7 @@ Dengan mengakses, menjelajahi situs web, memasang ekstensi peramban, atau mengun
 
 ## 3. Penafian Afiliasi Pihak Ketiga (Disclaimer of Affiliation)
 
-> ⚠️ **Pernyataan Independensi Penting**:
+> **Pernyataan Independensi Penting**:
 > 
 > **Instagram Follow Back Checker** adalah proyek independen pihak ketiga dan **TIDAK** berafiliasi, disponsori, didukung, atau disahkan secara resmi oleh **Instagram**, **Meta Platforms, Inc.**, atau anak perusahaannya. Nama "Instagram", logo Instagram, dan merek dagang terkait adalah hak kekayaan intelektual milik Meta Platforms, Inc.
 

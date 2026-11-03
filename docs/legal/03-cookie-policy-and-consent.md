@@ -1,4 +1,4 @@
-# 🍪 Kebijakan Kuki & Penyimpanan Lokal (Cookie & Local Storage Policy)
+# Kebijakan Kuki & Penyimpanan Lokal (Cookie & Local Storage Policy)
 
 *Terakhir diperbarui: 4 November 2026*
 

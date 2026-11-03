@@ -1,4 +1,4 @@
-# 🔒 Kebijakan Privasi (Privacy Policy) - Instagram Follow Back Checker
+# Kebijakan Privasi (Privacy Policy) - Instagram Follow Back Checker
 
 *Terakhir diperbarui: 4 November 2026*
 
@@ -36,7 +36,7 @@ Aplikasi ini menggunakan penyimpanan lokal peramban (*HTML5 localStorage*) semat
 2. `follback_unfollowed_v1`: Menyimpan daftar akun yang telah Anda tandai sebagai "sudah di-unfollow" atau "sudah di-follow" agar tidak perlu ditandai ulang.
 3. `follback_snapshot_v1`: Menyimpan salinan ringkasan analisis terakhir untuk mendeteksi perubahan jika Anda mengunggah data baru di masa mendatang.
 
-> 💡 **Kontrol Penuh Anda**: Anda dapat menghapus seluruh data lokal ini kapan saja dengan mengklik tombol **"Hapus Data"** pada antarmuka aplikasi atau melalui menu pengaturan peramban Anda (*Clear Site Data*).
+> **Kontrol Penuh Anda**: Anda dapat menghapus seluruh data lokal ini kapan saja dengan mengklik tombol **"Hapus Data"** pada antarmuka aplikasi atau melalui menu pengaturan peramban Anda (*Clear Site Data*).
 
 ---
 

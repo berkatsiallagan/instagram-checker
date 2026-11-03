@@ -332,7 +332,7 @@ export default function PrivacyPage() {
           </a>
         </p>
         <p style={{ margin: 0 }}>
-          © {new Date().getFullYear()} Instagram Checker • Developed by{" "}
+          (c) {new Date().getFullYear()} Instagram Checker • Developed by{" "}
           <a
             href="https://berkatsiallagan.com"
             target="_blank"
