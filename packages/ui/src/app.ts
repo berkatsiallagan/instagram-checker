@@ -593,22 +593,19 @@ export function mountApp(
       ...names.map((name) => {
         const isUnfollowed = unfollowedSet.has(name);
         const isFollowed = followedSet.has(name);
+        const actionLabel = tab === "notFollowingBack" ? t.actionUnfollow : t.profile;
         const link = externalLink(
           `https://www.instagram.com/${encodeURIComponent(name)}/`,
-          t.profile
+          actionLabel
         );
         link.className = "link-inline";
 
-        // Tab-specific popup
+        // Tab-specific action
         if (tab === "notFollowingBack") {
           link.addEventListener("click", () => {
-            setTimeout(() => {
-              if (window.confirm(t.confirmUnfollow)) {
-                unfollowedSet.add(name);
-                saveUnfollowed();
-                renderList();
-              }
-            }, 250);
+            unfollowedSet.add(name);
+            saveUnfollowed();
+            renderList();
           });
         } else if (tab === "fans") {
           link.addEventListener("click", () => {

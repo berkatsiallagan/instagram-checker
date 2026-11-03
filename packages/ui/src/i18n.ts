@@ -26,6 +26,7 @@ export interface Strings {
   tabRemovedSuggestions: string;
   search: string;
   profile: string;
+  actionUnfollow: string;
   exportCsv: string;
   resetData: string;
   confirmReset: string;
@@ -83,6 +84,7 @@ const en: Strings = {
   tabRemovedSuggestions: "Dismissed suggestions",
   search: "Search username",
   profile: "Open profile",
+  actionUnfollow: "Unfollow",
   exportCsv: "Export CSV",
   resetData: "Clear saved data",
   confirmReset: "Clear all saved analysis and unfollow progress?",
@@ -153,6 +155,7 @@ const id: Strings = {
   tabRemovedSuggestions: "Saran dihapus",
   search: "Cari username",
   profile: "Buka profil",
+  actionUnfollow: "Unfollow",
   exportCsv: "Ekspor CSV",
   resetData: "Hapus data tersimpan",
   confirmReset: "Hapus semua data analisis dan progres unfollow yang tersimpan?",
