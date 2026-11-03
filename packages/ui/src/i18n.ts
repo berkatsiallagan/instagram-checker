@@ -27,6 +27,8 @@ export interface Strings {
   guideStep1: string;
   guideStep2: string;
   guideStep3: string;
+  confirmUnfollow: string;
+  unfollowedBadge: string;
   sortDefault: string;
   sortAz: string;
   sortZa: string;
@@ -71,6 +73,8 @@ const en: Strings = {
     "Select Some of your information, check Followers and following, and choose JSON format.",
   guideStep3:
     "Once the file is ready, download and extract the zip archive. Drag followers_1.json and following.json here.",
+  confirmUnfollow: "Mark as unfollowed?",
+  unfollowedBadge: "Unfollowed",
   sortDefault: "Default order",
   sortAz: "Username (A - Z)",
   sortZa: "Username (Z - A)",
@@ -123,6 +127,8 @@ const id: Strings = {
     "Pilih Beberapa informasi Anda, centang Pengikut dan mengikuti (Followers & following), lalu pilih format JSON.",
   guideStep3:
     "Setelah file siap, unduh dan ekstrak arsip zip. Masukkan file followers_1.json dan following.json ke sini.",
+  confirmUnfollow: "Tandai sudah unfollow?",
+  unfollowedBadge: "Sudah di-unfollow",
   sortDefault: "Urutan default",
   sortAz: "Username (A - Z)",
   sortZa: "Username (Z - A)",

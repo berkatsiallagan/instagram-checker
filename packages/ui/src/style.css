@@ -438,6 +438,28 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.list li.unfollowed {
+  opacity: 0.55;
+}
+
+.list li.unfollowed .username {
+  text-decoration: line-through;
+}
+
+.user-box {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.badge-unfollowed {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
 .list li span {
   min-width: 0;
   overflow: hidden;

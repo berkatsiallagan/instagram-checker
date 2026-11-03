@@ -78,6 +78,30 @@ export function mountApp(
   let rawFollowers: string[] | null = state.rawFollowers ?? null;
   let rawFollowing: string[] | null = state.rawFollowing ?? null;
 
+  const UNFOLLOWED_KEY = "instagram-checker-unfollowed";
+  const unfollowedSet = new Set<string>();
+  try {
+    const raw = localStorage.getItem(UNFOLLOWED_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        for (const item of arr) {
+          if (typeof item === "string") unfollowedSet.add(item);
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  function saveUnfollowed(): void {
+    try {
+      localStorage.setItem(UNFOLLOWED_KEY, JSON.stringify(Array.from(unfollowedSet)));
+    } catch {
+      // ignore
+    }
+  }
+
   // Language selector
   const langSelect = el(
     "select",
@@ -384,13 +408,47 @@ export function mountApp(
     }
     list.replaceChildren(
       ...names.map((name) => {
+        const isUnfollowed = unfollowedSet.has(name);
         const link = externalLink(
           `https://www.instagram.com/${encodeURIComponent(name)}/`,
-          icon("open_in_new"),
           t.profile
         );
         link.className = "link-inline";
-        return el("li", {}, el("span", {}, name), link);
+        link.addEventListener("click", () => {
+          setTimeout(() => {
+            if (window.confirm(t.confirmUnfollow)) {
+              unfollowedSet.add(name);
+              saveUnfollowed();
+              renderList();
+            }
+          }, 250);
+        });
+
+        const nameSpan = el("span", { className: "username" }, name);
+        const userBoxChildren: (Node | string)[] = [nameSpan];
+        if (isUnfollowed) {
+          userBoxChildren.push(
+            el("span", { className: "badge-unfollowed" }, `(${t.unfollowedBadge})`)
+          );
+        }
+        const userBox = el("div", { className: "user-box" }, ...userBoxChildren);
+        userBox.title = isUnfollowed ? t.unfollowedBadge : "";
+        userBox.addEventListener("click", () => {
+          if (unfollowedSet.has(name)) {
+            unfollowedSet.delete(name);
+          } else {
+            unfollowedSet.add(name);
+          }
+          saveUnfollowed();
+          renderList();
+        });
+
+        return el(
+          "li",
+          { className: isUnfollowed ? "unfollowed" : "" },
+          userBox,
+          link
+        );
       })
     );
   }

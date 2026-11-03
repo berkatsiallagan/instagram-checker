@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   creator: "Berkat Tua Siallagan",
   publisher: "Berkat Tua Siallagan",
   manifest: "/manifest.webmanifest",
+  verification: {
+    google: "S-SN_9JquRtuZYP1gW-SlpPYLaZoRxkqOJD-Sqr9p4Q",
+  },
   alternates: {
     canonical: "https://ig.berkatsiallagan.com",
   },
