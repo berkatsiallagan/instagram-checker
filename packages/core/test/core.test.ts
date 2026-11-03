@@ -88,6 +88,34 @@ describe("parseUsernames", () => {
     expect([...parseUsernames(data)].sort()).toEqual(["alice", "bob"]);
   });
 
+  it("membaca format label_values (Meta Accounts Center export nyata)", () => {
+    const data = [
+      {
+        timestamp: 1787756714,
+        media: [],
+        label_values: [
+          { label: "URL", value: "" },
+          { label: "Name", value: "liya" },
+          { label: "Username", value: "lyawliya" },
+        ],
+        fbid: "17841425548073577",
+      },
+    ];
+    expect([...parseUsernames(data)]).toEqual(["lyawliya"]);
+
+    const singleObjectData = {
+      timestamp: 1780331312,
+      media: [],
+      label_values: [
+        { label: "URL", value: "" },
+        { label: "Name", value: "Welly" },
+        { label: "Username", value: "bolon0030" },
+      ],
+      fbid: "17841445413836553",
+    };
+    expect([...parseUsernames(singleObjectData)]).toEqual(["bolon0030"]);
+  });
+
   it("membaca format label: Username dan value langsung", () => {
     const data = [
       { label: "Username", value: "target_user_1" },

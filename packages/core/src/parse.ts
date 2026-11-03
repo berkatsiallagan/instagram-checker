@@ -84,14 +84,39 @@ function usernameFromEntry(entry: Entry | unknown): string {
 
   const rec = entry as Record<string, unknown>;
 
-  // 1. Direct label: "Username" dan value: "..."
+  // 1. label_values array (format Meta Accounts Center untuk pending requests, close friends, suggestions, dll.)
+  if (Array.isArray(rec.label_values)) {
+    for (const lv of rec.label_values as { label?: unknown; value?: unknown }[]) {
+      if (lv && typeof lv === "object") {
+        const lbl = nonEmptyString(lv.label).toLowerCase();
+        const val = nonEmptyString(lv.value);
+        if (lbl.includes("user") && val) return normalizeUsername(val);
+      }
+    }
+    // Fallback di dalam label_values: cek Name jika satu kata, atau URL
+    for (const lv of rec.label_values as { label?: unknown; value?: unknown }[]) {
+      if (lv && typeof lv === "object") {
+        const lbl = nonEmptyString(lv.label).toLowerCase();
+        const val = nonEmptyString(lv.value);
+        if (lbl.includes("name") && val && !val.includes(" ") && !val.includes("/")) {
+          return normalizeUsername(val);
+        }
+        if (lbl.includes("url") && val) {
+          const u = usernameFromHref(val);
+          if (u) return normalizeUsername(u);
+        }
+      }
+    }
+  }
+
+  // 2. Direct label: "Username" dan value: "..."
   const directLabel = nonEmptyString(rec.label).toLowerCase();
   const directVal = nonEmptyString(rec.value);
   if (directLabel.includes("user") && directVal) {
     return normalizeUsername(directVal);
   }
 
-  // 2. string_map_data (banyak digunakan di export Meta Accounts Center untuk pending requests, dismissed suggestions, dll.)
+  // 3. string_map_data (banyak digunakan di export Meta Accounts Center)
   if (rec.string_map_data && typeof rec.string_map_data === "object") {
     if (Array.isArray(rec.string_map_data)) {
       for (const item of rec.string_map_data) {
@@ -148,7 +173,7 @@ function usernameFromEntry(entry: Entry | unknown): string {
     }
   }
 
-  // 3. string_list_data (format followers_1.json, following.json, dll.)
+  // 4. string_list_data (format followers_1.json, following.json, dll.)
   const items = Array.isArray(rec.string_list_data)
     ? (rec.string_list_data as StringListItem[])
     : [];
@@ -167,32 +192,32 @@ function usernameFromEntry(entry: Entry | unknown): string {
     }
   }
 
-  // 4. Title (khusus format following.json di mana title adalah username)
+  // 5. Title (khusus format following.json di mana title adalah username)
   const title = nonEmptyString(rec.title);
   if (title && !title.includes(" ") && !title.includes("/")) {
     return normalizeUsername(title);
   }
 
-  // 5. Direct value jika ada dan bukan kalimat/frase panjang
+  // 6. Direct value jika ada dan bukan kalimat/frase panjang
   if (directVal && !directVal.includes(" ") && !directVal.includes("/")) {
     return normalizeUsername(directVal);
   }
 
-  // 6. Direct username / name
+  // 7. Direct username / name
   const u = nonEmptyString(rec.username);
   if (u) return normalizeUsername(u);
 
   const name = nonEmptyString(rec.name);
   if (name && !name.includes(" ") && !name.includes("/")) return normalizeUsername(name);
 
-  // 7. Direct href
+  // 8. Direct href
   const href = nonEmptyString(rec.href);
   if (href) {
     const fromHref = usernameFromHref(href);
     if (fromHref) return normalizeUsername(fromHref);
   }
 
-  // 8. Fallback title
+  // 9. Fallback title
   if (title) return normalizeUsername(title);
 
   return "";
@@ -202,6 +227,10 @@ function extractEntries(data: unknown): Entry[] {
   if (Array.isArray(data)) return data as Entry[];
   if (data && typeof data === "object") {
     const rec = data as Record<string, unknown>;
+    // Jika root object adalah single profile entry (seperti restricted_profiles.json dengan 1 akun)
+    if (Array.isArray(rec.label_values)) return [rec as Entry];
+    if (Array.isArray(rec.string_list_data) && rec.string_list_data.length > 0) return [rec as Entry];
+
     // Prioritaskan LIST_KEYS yang punya elemen
     for (const key of LIST_KEYS) {
       const list = rec[key];
@@ -212,12 +241,12 @@ function extractEntries(data: unknown): Entry[] {
       const list = rec[key];
       if (Array.isArray(list)) return list as Entry[];
     }
-    // Cari semua array di dalam objek, prioritaskan yang tidak kosong dan bukan media_list_data
+    // Cari semua array di dalam objek, prioritaskan yang tidak kosong dan bukan media_list_data / media
     const allArrays: Entry[][] = [];
     for (const key of Object.keys(rec)) {
       if (Array.isArray(rec[key])) {
         const arr = rec[key] as Entry[];
-        if (arr.length > 0 && key !== "media_list_data") {
+        if (arr.length > 0 && key !== "media_list_data" && key !== "media") {
           return arr;
         }
         allArrays.push(arr);
