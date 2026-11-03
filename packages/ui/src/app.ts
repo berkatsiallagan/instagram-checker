@@ -143,16 +143,42 @@ export function mountApp(
   });
   fileInput.hidden = true;
 
-  // Zona unggah: ikon, tombol "Pilih file" yang jelas, dan petunjuk drag-drop.
+  const folderInput = el("input", {
+    type: "file",
+  });
+  folderInput.setAttribute("webkitdirectory", "");
+  folderInput.setAttribute("directory", "");
+  folderInput.hidden = true;
+
+  const chooseFileBtn = el("span", { className: "btn-fake" }, t.choose);
+  const chooseFolderBtn = el(
+    "span",
+    { className: "btn-fake btn-folder" },
+    t.chooseFolder
+  );
+
+  chooseFileBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    fileInput.click();
+  });
+
+  chooseFolderBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    folderInput.click();
+  });
+
+  const btnRow = el("div", { className: "drop-btn-row" }, chooseFileBtn, chooseFolderBtn);
+
+  // Zona unggah hybrid: bisa klik pilih file, pilih folder, atau drag folder/file langsung.
   const drop = el(
     "div",
     { className: "drop", tabIndex: 0 },
     icon("upload_file", "icon icon-xl"),
-    el("span", { className: "btn-fake" }, t.choose),
+    btnRow,
     el("span", { className: "drop-hint" }, t.dropHint)
   );
-  drop.setAttribute("role", "button");
-  drop.setAttribute("aria-label", `${t.choose}. ${t.dropHint}`);
+  drop.setAttribute("role", "region");
+  drop.setAttribute("aria-label", `${t.choose}. ${t.chooseFolder}. ${t.dropHint}`);
 
   const guide = el(
     "details",
@@ -250,7 +276,7 @@ export function mountApp(
     )
   );
 
-  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput, guide];
+  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput, folderInput, guide];
   if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
   if (actions) children.push(actions);
   if (opts.onCheck && opts.showWarning !== false) {
@@ -505,11 +531,78 @@ export function mountApp(
     }
   }
 
+  interface FileEntryLike {
+    isFile: boolean;
+    isDirectory: boolean;
+    file(success: (file: File) => void, error?: (err: unknown) => void): void;
+    createReader(): {
+      readEntries(
+        success: (entries: FileEntryLike[]) => void,
+        error?: (err: unknown) => void
+      ): void;
+    };
+  }
+
+  async function extractFilesFromDataTransfer(dataTransfer: DataTransfer): Promise<File[]> {
+    const items = dataTransfer.items;
+    if (items && items.length > 0) {
+      const entries: FileEntryLike[] = [];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (
+          typeof (item as unknown as { webkitGetAsEntry?: () => unknown }).webkitGetAsEntry ===
+          "function"
+        ) {
+          const entry = (
+            item as unknown as { webkitGetAsEntry: () => FileEntryLike | null }
+          ).webkitGetAsEntry();
+          if (entry) entries.push(entry);
+        }
+      }
+      if (entries.length > 0) {
+        const collected: File[] = [];
+        async function scan(entry: FileEntryLike): Promise<void> {
+          if (entry.isFile) {
+            await new Promise<void>((resolve) => {
+              entry.file(
+                (f) => {
+                  collected.push(f);
+                  resolve();
+                },
+                () => resolve()
+              );
+            });
+          } else if (entry.isDirectory) {
+            const reader = entry.createReader();
+            const subEntries = await new Promise<FileEntryLike[]>((resolve) => {
+              reader.readEntries(
+                (res) => resolve(res),
+                () => resolve([])
+              );
+            });
+            for (const sub of subEntries) {
+              await scan(sub);
+            }
+          }
+        }
+        for (const entry of entries) {
+          await scan(entry);
+        }
+        if (collected.length > 0) return collected;
+      }
+    }
+    return Array.from(dataTransfer.files || []);
+  }
+
   async function handleFiles(files: FileList | File[]): Promise<void> {
     const arr = Array.from(files);
     if (arr.length === 0) return;
+    const jsonFiles = arr.filter(
+      (f) => f.name.toLowerCase().endsWith(".json") || f.type.includes("json")
+    );
+    const targetFiles = jsonFiles.length > 0 ? jsonFiles : arr;
     try {
-      handleTexts(await Promise.all(arr.map((f) => f.text())));
+      handleTexts(await Promise.all(targetFiles.map((f) => f.text())));
     } catch (e) {
       fail(e);
     }
@@ -527,14 +620,21 @@ export function mountApp(
     drop.classList.add("active");
   });
   drop.addEventListener("dragleave", () => drop.classList.remove("active"));
-  drop.addEventListener("drop", (e) => {
+  drop.addEventListener("drop", async (e) => {
     e.preventDefault();
     drop.classList.remove("active");
-    if (e.dataTransfer) void handleFiles(e.dataTransfer.files);
+    if (e.dataTransfer) {
+      const files = await extractFilesFromDataTransfer(e.dataTransfer);
+      void handleFiles(files);
+    }
   });
   fileInput.addEventListener("change", () => {
     if (fileInput.files) void handleFiles(fileInput.files);
     fileInput.value = "";
+  });
+  folderInput.addEventListener("change", () => {
+    if (folderInput.files) void handleFiles(folderInput.files);
+    folderInput.value = "";
   });
 
   searchInput.addEventListener("input", () => {

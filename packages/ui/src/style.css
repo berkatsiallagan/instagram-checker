@@ -120,12 +120,26 @@ h1 {
   color: var(--accent);
 }
 
+.drop-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
 .btn-fake {
   display: inline-block;
   padding: 8px 20px;
   background: var(--accent);
   color: var(--accent-fg);
   font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-fake.btn-folder {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
 }
 
 .drop-hint {
@@ -239,6 +253,7 @@ button.primary {
   gap: 6px;
   margin: 0 auto 6px;
   font-size: 13px;
+  line-height: 1.4;
   text-align: center;
 }
 
@@ -246,6 +261,8 @@ button.primary {
   flex-shrink: 0;
   width: 1.15em;
   height: 1.15em;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .footer p {
@@ -515,6 +532,11 @@ a {
     padding: 24px 12px;
   }
 
+  .drop-btn-row {
+    width: 100%;
+    flex-direction: column;
+  }
+
   .btn-fake {
     width: 100%;
     padding: 10px 16px;
@@ -531,7 +553,12 @@ a {
   }
 
   .privacy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     padding: 0 8px;
     font-size: 12px;
+    text-align: center;
   }
 }

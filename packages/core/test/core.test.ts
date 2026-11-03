@@ -82,6 +82,17 @@ describe("parseFiles", () => {
   it("gagal pada teks bukan JSON", () => {
     expect(() => parseFiles(["xx"])).toThrow(ParseError);
   });
+
+  it("mengabaikan file lain di dalam folder export Instagram", () => {
+    const otherJson = { some_other_data: [1, 2, 3] };
+    const { followers, following } = parseFiles([
+      JSON.stringify(followersJson),
+      JSON.stringify(otherJson),
+      JSON.stringify(followingJson),
+    ]);
+    expect([...followers].sort()).toEqual(["alice", "bob"]);
+    expect([...following].sort()).toEqual(["bob", "carol"]);
+  });
 });
 
 describe("parseApiPage", () => {

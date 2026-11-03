@@ -114,19 +114,33 @@ export function parseFiles(texts: string[]): {
   const following = new Set<string>();
   let sawFollowers = false;
   let sawFollowing = false;
+  let hasValidJson = false;
+
   for (const text of texts) {
     let data: unknown;
     try {
       data = JSON.parse(text);
+      hasValidJson = true;
     } catch {
-      throw new ParseError("invalid_json", "The file is not valid JSON.");
+      continue;
     }
-    const kind = detectKind(data);
+    let kind: Kind;
+    try {
+      kind = detectKind(data);
+    } catch {
+      // Abaikan file JSON lain yang ada di dalam folder export Instagram
+      continue;
+    }
     const target = kind === "followers" ? followers : following;
     for (const name of parseUsernames(data)) target.add(name);
     if (kind === "followers") sawFollowers = true;
     else sawFollowing = true;
   }
+
+  if (!hasValidJson && texts.length > 0) {
+    throw new ParseError("invalid_json", "The file is not valid JSON.");
+  }
+
   if (!sawFollowers || !sawFollowing) {
     throw new ParseError(
       "need_both",

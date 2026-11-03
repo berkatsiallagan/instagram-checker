@@ -8,6 +8,7 @@ export interface Strings {
   title: string;
   subtitle: string;
   choose: string;
+  chooseFolder: string;
   dropHint: string;
   demo: string;
   check: string;
@@ -50,7 +51,8 @@ const en: Strings = {
   subtitle:
     "A free tool to see who does not follow you back on Instagram. Private by design: everything runs in your browser.",
   choose: "Choose files",
-  dropHint: "or drop followers_1.json and following.json here",
+  chooseFolder: "Choose folder",
+  dropHint: "or drop followers_and_following folder or files here",
   demo: "Watch demo video",
   check: "Check",
   checking: "Checking",
@@ -104,7 +106,8 @@ const id: Strings = {
   subtitle:
     "Alat gratis untuk melihat siapa yang tidak follow kamu balik di Instagram. Privat dari awal: semuanya berjalan di browser kamu.",
   choose: "Pilih file",
-  dropHint: "atau taruh followers_1.json dan following.json di sini",
+  chooseFolder: "Pilih folder",
+  dropHint: "atau taruh folder atau file followers_and_following di sini",
   demo: "Tonton video demo",
   check: "Cek",
   checking: "Memeriksa",
