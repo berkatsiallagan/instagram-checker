@@ -3,6 +3,10 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: no-store
+  Cloudflare-CDN-Cache-Control: no-store
 
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
+  CDN-Cache-Control: no-store
+  Cloudflare-CDN-Cache-Control: no-store
