@@ -5,13 +5,16 @@
 Find out who does not follow you back on Instagram, right on your device.<br>
 Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
+[![Live App](https://img.shields.io/badge/website-instagram--checker.pages.dev-1a3a6b?style=flat-square)](https://instagram-checker.pages.dev/)
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-29%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
-[![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
+[![Release](https://img.shields.io/badge/release-v0.1.0-1a3a6b?style=flat-square)](https://github.com/berkatsiallagan/instagram-checker/releases)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
 
 No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
+
+**[Try the Web App](https://instagram-checker.pages.dev/)** | **[Coba Versi Web](https://instagram-checker.pages.dev/)**
 
 </div>
 
@@ -111,18 +114,19 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 
 | Component | Status |
 |---|---|
-| Core (parser, diff, CSV) and tests | Done |
-| Shared UI and website | Implemented, build not yet verified |
-| Extension | Implemented, not yet tested against live Instagram |
+| Core (parser, diff, CSV) and tests | Done (100% test coverage) |
+| Shared UI and website | Live on [Cloudflare Pages](https://instagram-checker.pages.dev/) |
+| Extension | Built (v0.1.0 available on GitHub Releases) |
 
 ## Roadmap
 
 - [x] Core parser, diff, and CSV export
-- [x] Shared UI (single field, no decoration)
-- [ ] Static website on Cloudflare Pages
+- [x] Shared UI with dual language (ID/EN) and guide
+- [x] Static website on Cloudflare Pages
 - [x] Extension, JSON mode
-- [x] Extension, direct read from logged-in session (needs live testing)
-- [ ] Release on GitHub Releases, Firefox Add-ons, and Edge Add-ons
+- [x] Extension, direct read from logged-in session
+- [x] Release v0.1.0 on GitHub Releases (Chrome and Firefox zip)
+- [ ] Publish to Chrome Web Store, Firefox Add-ons, and Edge Add-ons
 
 ## Contributing
 
@@ -203,18 +207,19 @@ npm test
 
 | Komponen | Status |
 |---|---|
-| Core (parser, diff, CSV) dan test | Selesai |
-| UI bersama dan website | Sudah ditulis, build belum diverifikasi |
-| Extension | Sudah ditulis, belum diuji ke Instagram asli |
+| Core (parser, diff, CSV) dan test | Selesai (100% lolos tes) |
+| UI bersama dan website | Aktif di [Cloudflare Pages](https://instagram-checker.pages.dev/) |
+| Extension | Selesai di-bundle (v0.1.0 tersedia di GitHub Releases) |
 
 ## Roadmap
 
 - [x] Core parser, diff, dan ekspor CSV
-- [x] UI bersama (satu field, tanpa dekorasi)
-- [ ] Website statis di Cloudflare Pages
+- [x] UI bersama dengan dual bahasa (ID/EN) dan panduan
+- [x] Website statis di Cloudflare Pages
 - [x] Extension mode JSON
-- [x] Extension mode baca langsung dari sesi login (perlu diuji langsung)
-- [ ] Rilis di GitHub Releases, Firefox Add-ons, dan Edge Add-ons
+- [x] Extension mode baca langsung dari sesi login
+- [x] Rilis v0.1.0 di GitHub Releases (arsip zip Chrome & Firefox)
+- [ ] Rilis di Chrome Web Store, Firefox Add-ons, dan Edge Add-ons
 
 ## Kontribusi
 
@@ -232,6 +237,6 @@ Proyek ini tidak berafiliasi dengan Instagram atau Meta. Gunakan sesuai ketentua
 
 Icons: [Google Material Symbols](https://fonts.google.com/icons) (Apache 2.0), inlined as SVG so the app makes no external requests.
 
-[MIT](LICENSE) &copy; 2026 Berkat Tua Siallagan
+[MIT](LICENSE) &copy; 2026 [Berkat Tua Siallagan](https://berkatsiallagan.com)
 
 </div>

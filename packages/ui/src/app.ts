@@ -1,7 +1,6 @@
 import { ParseError, diff, parseFiles, toCsv, type Result } from "@follback/core";
 import {
   AUTHOR_NAME,
-  AUTHOR_SITE,
   AUTHOR_URL,
   DEMO_VIDEO_URL,
   SHOW_DEMO_VIDEO,
@@ -169,7 +168,7 @@ export function mountApp(
       {},
       `${t.developedBy} `,
       Object.assign(
-        externalLink(AUTHOR_URL, `${AUTHOR_NAME} (${AUTHOR_SITE})`),
+        externalLink(AUTHOR_URL, AUTHOR_NAME),
         { title: `Website Architect & Full-Stack Developer: ${AUTHOR_NAME}` }
       )
     )
