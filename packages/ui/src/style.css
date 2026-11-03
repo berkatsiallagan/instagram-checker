@@ -51,16 +51,45 @@ h1 {
 }
 
 .drop {
-  border: 1px solid var(--line);
-  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 2px dashed var(--accent);
+  padding: 32px 16px;
   text-align: center;
   color: var(--muted);
   cursor: pointer;
 }
 
 .drop.active {
-  border-color: var(--accent);
+  border-style: solid;
   color: var(--fg);
+}
+
+.drop .icon-xl {
+  width: 48px;
+  height: 48px;
+  color: var(--accent);
+}
+
+.btn-fake {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+
+.drop-hint {
+  font-size: 14px;
+}
+
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+  fill: currentColor;
 }
 
 .drop:focus-visible,
@@ -72,11 +101,63 @@ input:focus-visible {
 }
 
 .hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
   margin: 12px 0 0;
   text-align: center;
   color: var(--muted);
   font-size: 14px;
 }
+
+.check-row {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 0;
+}
+
+button,
+.link-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button.primary {
+  padding: 10px 24px;
+  font-weight: 600;
+}
+
+.searchbox {
+  position: relative;
+  margin: 12px 0;
+}
+
+.searchbox .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  margin-top: -0.625em;
+  color: var(--muted);
+}
+
+.searchbox .search {
+  margin: 0;
+  padding-left: 36px;
+}
+
+.privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.footer p {
+  margin: 4px 0;
+}
+
 
 button {
   font: inherit;

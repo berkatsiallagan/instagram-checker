@@ -1,4 +1,13 @@
 import { diff, parseFiles, toCsv, type Result } from "@follback/core";
+import {
+  AUTHOR_NAME,
+  AUTHOR_SITE,
+  AUTHOR_URL,
+  DEMO_VIDEO_URL,
+  VERSION,
+  YEAR,
+} from "./config";
+import { icon } from "./icons";
 import { detectLang, strings, type Strings } from "./i18n";
 import { sampleFiles } from "./sample";
 
@@ -24,6 +33,14 @@ function el<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 
+function externalLink(href: string, ...children: (Node | string)[]): HTMLAnchorElement {
+  return el(
+    "a",
+    { href, target: "_blank", rel: "noopener noreferrer" },
+    ...children
+  );
+}
+
 export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
   const lang = detectLang();
   const t: Strings = strings(lang);
@@ -41,51 +58,84 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
   });
   fileInput.hidden = true;
 
-  const drop = el("div", { className: "drop", tabIndex: 0 }, t.drop);
+  // Zona unggah: ikon, tombol "Pilih file" yang jelas, dan petunjuk drag-drop.
+  const drop = el(
+    "div",
+    { className: "drop", tabIndex: 0 },
+    icon("upload_file", "icon icon-xl"),
+    el("span", { className: "btn-fake" }, t.choose),
+    el("span", { className: "drop-hint" }, t.dropHint)
+  );
   drop.setAttribute("role", "button");
+  drop.setAttribute("aria-label", `${t.choose}. ${t.dropHint}`);
 
   const error = el("p", { className: "error" });
   error.setAttribute("role", "alert");
 
-  const sampleBtn = el("button", { className: "link", type: "button" }, t.sample);
+  const sampleBtn = el(
+    "button",
+    { className: "link", type: "button" },
+    icon("description"),
+    t.sample
+  );
+  const demoLink = externalLink(DEMO_VIDEO_URL, icon("play_circle"), t.demo);
+  demoLink.className = "link-inline";
 
-  const actions = el("p", { className: "hint" }, sampleBtn);
+  const actions = el("p", { className: "hint" }, sampleBtn, demoLink);
+
   let checkBtn: HTMLButtonElement | null = null;
+  let checkLabel: HTMLSpanElement | null = null;
   if (opts.onCheck) {
-    checkBtn = el("button", { className: "primary", type: "button" }, t.check);
-    actions.prepend(checkBtn, " ");
-  }
-  if (opts.onCheck && opts.showWarning !== false) {
-    actions.after(el("p", { className: "hint" }, t.warning));
+    checkLabel = el("span", {}, t.check);
+    checkBtn = el("button", { className: "primary", type: "button" }, icon("refresh"), checkLabel);
   }
 
   const tabs = el("div", { className: "tabs" });
   tabs.setAttribute("role", "tablist");
+
   const searchInput = el("input", {
     type: "search",
     placeholder: t.search,
     className: "search",
   });
   searchInput.setAttribute("aria-label", t.search);
-  const exportBtn = el("button", { className: "link", type: "button" }, t.exportCsv);
+  const searchBox = el("div", { className: "searchbox" }, icon("search"), searchInput);
+
+  const exportBtn = el(
+    "button",
+    { className: "link", type: "button" },
+    icon("download"),
+    t.exportCsv
+  );
   const list = el("ul", { className: "list" });
-  const section = el("section", { className: "results" }, tabs, searchInput, list, exportBtn);
+  const section = el("section", { className: "results" }, tabs, searchBox, list, exportBtn);
   section.hidden = true;
 
-  const footer = el("p", { className: "footer" }, t.privacy);
-
-  const main = el(
-    "main",
-    {},
-    el("h1", {}, t.title),
-    drop,
-    fileInput,
-    actions,
-    error,
-    section,
-    footer
+  const footer = el(
+    "footer",
+    { className: "footer" },
+    el("p", { className: "privacy" }, icon("lock"), t.privacy),
+    el("p", {}, `\u00a9 ${YEAR} Follback Checker. v${VERSION}`),
+    el(
+      "p",
+      {},
+      `${t.developedBy} `,
+      Object.assign(
+        externalLink(AUTHOR_URL, `${AUTHOR_NAME} (${AUTHOR_SITE})`),
+        { title: `Website Architect & Full-Stack Developer: ${AUTHOR_NAME}` }
+      )
+    )
   );
-  root.replaceChildren(main);
+
+  const children: (Node | string)[] = [el("h1", {}, t.title), drop, fileInput];
+  if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
+  children.push(actions);
+  if (opts.onCheck && opts.showWarning !== false) {
+    children.push(el("p", { className: "hint" }, t.warning));
+  }
+  children.push(error, section, footer);
+
+  root.replaceChildren(el("main", {}, ...children));
 
   const labels: Record<TabKey, string> = {
     notFollowingBack: t.tabNot,
@@ -123,22 +173,15 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
       return;
     }
     list.replaceChildren(
-      ...names.map((name) =>
-        el(
-          "li",
-          {},
-          el("span", {}, name),
-          el(
-            "a",
-            {
-              href: `https://www.instagram.com/${encodeURIComponent(name)}/`,
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            t.profile
-          )
-        )
-      )
+      ...names.map((name) => {
+        const link = externalLink(
+          `https://www.instagram.com/${encodeURIComponent(name)}/`,
+          icon("open_in_new"),
+          t.profile
+        );
+        link.className = "link-inline";
+        return el("li", {}, el("span", {}, name), link);
+      })
     );
   }
 
@@ -220,22 +263,23 @@ export function mountApp(root: HTMLElement, opts: MountOptions = {}): void {
     URL.revokeObjectURL(url);
   });
 
-  if (checkBtn && opts.onCheck) {
+  if (checkBtn && checkLabel && opts.onCheck) {
     const run = opts.onCheck;
     const btn = checkBtn;
+    const label = checkLabel;
     btn.addEventListener("click", async () => {
       btn.disabled = true;
-      btn.textContent = t.checking;
+      label.textContent = t.checking;
       try {
         const { followers, following } = await run((text) => {
-          btn.textContent = `${t.checking} ${text}`;
+          label.textContent = `${t.checking} ${text}`;
         });
         show(followers, following);
       } catch (e) {
         fail(e);
       } finally {
         btn.disabled = false;
-        btn.textContent = t.check;
+        label.textContent = t.check;
       }
     });
   }

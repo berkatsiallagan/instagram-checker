@@ -230,6 +230,8 @@ Proyek ini tidak berafiliasi dengan Instagram atau Meta. Gunakan sesuai ketentua
 
 <div align="center">
 
+Icons: [Google Material Symbols](https://fonts.google.com/icons) (Apache 2.0), inlined as SVG so the app makes no external requests.
+
 [MIT](LICENSE) &copy; 2026 Berkat Tua Siallagan
 
 </div>

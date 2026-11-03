@@ -103,11 +103,13 @@ describe("privasi", () => {
     ).toEqual([]);
   });
 
-  it("tidak ada URL absolut selain instagram.com di kode klien", () => {
+  it("tidak ada URL absolut selain host yang diizinkan di kode klien", () => {
+    const allowed =
+      /^https?:\/\/(www\.(instagram|youtube)\.com|berkatsiallagan\.com)(\/|$|["'`])|^http:\/\/www\.w3\.org\/2000\/svg$/;
     const bad: string[] = [];
     for (const f of clientCode) {
       for (const m of f.text.matchAll(/https?:\/\/[^\s"'`)]+/g)) {
-        if (!/^https?:\/\/(www\.)?instagram\.com\//.test(m[0])) bad.push(`${f.path}: ${m[0]}`);
+        if (!allowed.test(m[0])) bad.push(`${f.path}: ${m[0]}`);
       }
     }
     expect(bad).toEqual([]);

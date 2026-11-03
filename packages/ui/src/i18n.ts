@@ -2,8 +2,10 @@ export type Lang = "en" | "id";
 
 export interface Strings {
   title: string;
-  drop: string;
+  choose: string;
+  dropHint: string;
   sample: string;
+  demo: string;
   check: string;
   checking: string;
   tabNot: string;
@@ -15,50 +17,50 @@ export interface Strings {
   empty: string;
   privacy: string;
   warning: string;
-  needBoth: string;
-  clear: string;
+  developedBy: string;
 }
 
 const en: Strings = {
   title: "Follback Checker",
-  drop: "Drop followers_1.json and following.json here, or click to choose files",
-  sample: "Use sample data",
+  choose: "Choose files",
+  dropHint: "or drop followers_1.json and following.json here",
+  sample: "Try sample data",
+  demo: "Watch demo video",
   check: "Check",
   checking: "Checking",
   tabNot: "Not following back",
   tabFans: "Fans",
   tabMutual: "Mutual",
   search: "Search username",
-  profile: "profile",
+  profile: "Open profile",
   exportCsv: "Export CSV",
   empty: "Nothing here.",
-  privacy:
-    "Everything runs in your browser. Your files never leave this device.",
+  privacy: "Everything runs in your browser. Your files never leave this device.",
   warning:
     "Reading directly from Instagram may get your account rate limited. Use at your own risk.",
-  needBoth: "Choose both followers and following files.",
-  clear: "Clear",
+  developedBy: "Developed by",
 };
 
 const id: Strings = {
   title: "Follback Checker",
-  drop: "Taruh followers_1.json dan following.json di sini, atau klik untuk memilih file",
-  sample: "Pakai data contoh",
+  choose: "Pilih file",
+  dropHint: "atau taruh followers_1.json dan following.json di sini",
+  sample: "Coba data contoh",
+  demo: "Tonton video demo",
   check: "Cek",
   checking: "Memeriksa",
   tabNot: "Tidak follback",
   tabFans: "Fans",
   tabMutual: "Mutual",
   search: "Cari username",
-  profile: "profil",
+  profile: "Buka profil",
   exportCsv: "Ekspor CSV",
   empty: "Tidak ada data.",
   privacy:
     "Semua berjalan di browser kamu. File tidak pernah keluar dari perangkat ini.",
   warning:
     "Membaca langsung dari Instagram bisa membuat akunmu kena pembatasan. Risiko ditanggung sendiri.",
-  needBoth: "Pilih file followers dan following sekaligus.",
-  clear: "Hapus",
+  developedBy: "Dikembangkan oleh",
 };
 
 export function detectLang(nav: { language?: string } = navigator): Lang {
