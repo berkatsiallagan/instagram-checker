@@ -130,6 +130,30 @@ export function mountApp(
     }
   }
 
+  const FOLLOWED_KEY = "instagram-checker-followed";
+  const followedSet = new Set<string>();
+  try {
+    const raw = localStorage.getItem(FOLLOWED_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        for (const item of arr) {
+          if (typeof item === "string") followedSet.add(item);
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  function saveFollowed(): void {
+    try {
+      localStorage.setItem(FOLLOWED_KEY, JSON.stringify(Array.from(followedSet)));
+    } catch {
+      // ignore
+    }
+  }
+
   // Language selector
   const langSelect = el(
     "select",
@@ -288,6 +312,7 @@ export function mountApp(
       try {
         localStorage.removeItem(SNAPSHOT_KEY);
         localStorage.removeItem(UNFOLLOWED_KEY);
+        localStorage.removeItem(FOLLOWED_KEY);
       } catch {
         // ignore
       }
@@ -295,6 +320,7 @@ export function mountApp(
       rawFollowers = null;
       rawFollowing = null;
       unfollowedSet.clear();
+      followedSet.clear();
       render();
     }
   });
@@ -437,28 +463,34 @@ export function mountApp(
     const followersCount = rawFollowers.length;
     const rate = followingCount > 0 ? Math.round((result.mutual.length / followingCount) * 100) : 0;
 
-    statsBox.replaceChildren(
+    const cards: HTMLElement[] = [
       el(
         "div",
-        { className: "stat-card" },
+        { className: "stat-card clickable", tabIndex: 0 },
         el("span", { className: "stat-val" }, String(followingCount)),
         el("span", { className: "stat-lbl" }, t.statsFollowing)
       ),
       el(
         "div",
-        { className: "stat-card" },
+        { className: "stat-card clickable", tabIndex: 0 },
         el("span", { className: "stat-val" }, String(followersCount)),
         el("span", { className: "stat-lbl" }, t.statsFollowers)
       ),
       el(
         "div",
-        { className: "stat-card" },
+        { className: "stat-card clickable", tabIndex: 0 },
         el("span", { className: "stat-val" }, String(result.notFollowingBack.length)),
         el("span", { className: "stat-lbl" }, t.statsNotFollback)
       ),
       el(
         "div",
-        { className: "stat-card" },
+        { className: "stat-card clickable", tabIndex: 0 },
+        el("span", { className: "stat-val" }, String(result.fans.length)),
+        el("span", { className: "stat-lbl" }, t.statsFans)
+      ),
+      el(
+        "div",
+        { className: "stat-card clickable", tabIndex: 0 },
         el("span", { className: "stat-val" }, String(result.mutual.length)),
         el("span", { className: "stat-lbl" }, t.statsMutual)
       ),
@@ -467,8 +499,51 @@ export function mountApp(
         { className: "stat-card highlight" },
         el("span", { className: "stat-val" }, `${rate}%`),
         el("span", { className: "stat-lbl" }, t.statsRate)
-      )
-    );
+      ),
+    ];
+
+    cards[2].addEventListener("click", () => {
+      tab = "notFollowingBack";
+      render();
+    });
+    cards[3].addEventListener("click", () => {
+      tab = "fans";
+      render();
+    });
+    cards[4].addEventListener("click", () => {
+      tab = "mutual";
+      render();
+    });
+
+    const extraKeys: ExtraCategoryKey[] = [
+      "pendingRequests",
+      "recentlyUnfollowed",
+      "closeFriends",
+      "blockedProfiles",
+      "restrictedProfiles",
+      "hideStoryFrom",
+      "recentRequests",
+      "removedSuggestions",
+    ];
+
+    for (const key of extraKeys) {
+      const list = result[key];
+      if (Array.isArray(list)) {
+        const card = el(
+          "div",
+          { className: "stat-card clickable", tabIndex: 0 },
+          el("span", { className: "stat-val" }, String(list.length)),
+          el("span", { className: "stat-lbl" }, labels[key])
+        );
+        card.addEventListener("click", () => {
+          tab = key;
+          render();
+        });
+        cards.push(card);
+      }
+    }
+
+    statsBox.replaceChildren(...cards);
   }
 
   function renderTabs(): void {
@@ -478,7 +553,7 @@ export function mountApp(
     const activeKeys = allKeys.filter((key) => {
       if (key === "notFollowingBack" || key === "fans" || key === "mutual") return true;
       const list = current[key];
-      return Array.isArray(list) && list.length > 0;
+      return Array.isArray(list);
     });
 
     tabs.replaceChildren(
@@ -517,43 +592,91 @@ export function mountApp(
     list.replaceChildren(
       ...names.map((name) => {
         const isUnfollowed = unfollowedSet.has(name);
+        const isFollowed = followedSet.has(name);
         const link = externalLink(
           `https://www.instagram.com/${encodeURIComponent(name)}/`,
           t.profile
         );
         link.className = "link-inline";
-        link.addEventListener("click", () => {
-          setTimeout(() => {
-            if (window.confirm(t.confirmUnfollow)) {
-              unfollowedSet.add(name);
-              saveUnfollowed();
-              renderList();
-            }
-          }, 250);
-        });
+
+        // Tab-specific popup
+        if (tab === "notFollowingBack") {
+          link.addEventListener("click", () => {
+            setTimeout(() => {
+              if (window.confirm(t.confirmUnfollow)) {
+                unfollowedSet.add(name);
+                saveUnfollowed();
+                renderList();
+              }
+            }, 250);
+          });
+        } else if (tab === "fans") {
+          link.addEventListener("click", () => {
+            setTimeout(() => {
+              if (window.confirm(t.confirmFollow)) {
+                followedSet.add(name);
+                saveFollowed();
+                renderList();
+              }
+            }, 250);
+          });
+        }
+        // Di tab mutual dan kategori lainnya: tidak ada popup
 
         const nameSpan = el("span", { className: "username" }, name);
         const userBoxChildren: (Node | string)[] = [nameSpan];
-        if (isUnfollowed) {
+
+        if (tab === "notFollowingBack" && isUnfollowed) {
           userBoxChildren.push(
             el("span", { className: "badge-unfollowed" }, `(${t.unfollowedBadge})`)
           );
+        } else if (tab === "fans" && isFollowed) {
+          userBoxChildren.push(
+            el("span", { className: "badge-followed" }, `(${t.followedBadge})`)
+          );
         }
-        const userBox = el("div", { className: "user-box" }, ...userBoxChildren);
-        userBox.title = isUnfollowed ? t.unfollowedBadge : "";
-        userBox.addEventListener("click", () => {
-          if (unfollowedSet.has(name)) {
-            unfollowedSet.delete(name);
-          } else {
-            unfollowedSet.add(name);
-          }
-          saveUnfollowed();
-          renderList();
-        });
+
+        const isActionable = tab === "notFollowingBack" || tab === "fans";
+        const userBox = el(
+          "div",
+          { className: `user-box${isActionable ? " clickable" : ""}` },
+          ...userBoxChildren
+        );
+
+        if (tab === "notFollowingBack") {
+          userBox.title = isUnfollowed ? t.unfollowedBadge : "";
+          userBox.addEventListener("click", () => {
+            if (unfollowedSet.has(name)) {
+              unfollowedSet.delete(name);
+            } else {
+              unfollowedSet.add(name);
+            }
+            saveUnfollowed();
+            renderList();
+          });
+        } else if (tab === "fans") {
+          userBox.title = isFollowed ? t.followedBadge : "";
+          userBox.addEventListener("click", () => {
+            if (followedSet.has(name)) {
+              followedSet.delete(name);
+            } else {
+              followedSet.add(name);
+            }
+            saveFollowed();
+            renderList();
+          });
+        }
+
+        let liClass = "";
+        if (tab === "notFollowingBack" && isUnfollowed) {
+          liClass = "unfollowed";
+        } else if (tab === "fans" && isFollowed) {
+          liClass = "followed";
+        }
 
         return el(
           "li",
-          { className: isUnfollowed ? "unfollowed" : "" },
+          { className: liClass },
           userBox,
           link
         );

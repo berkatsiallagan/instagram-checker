@@ -41,12 +41,15 @@ export interface Strings {
   guideNote: string;
   confirmUnfollow: string;
   unfollowedBadge: string;
+  confirmFollow: string;
+  followedBadge: string;
   sortDefault: string;
   sortAz: string;
   sortZa: string;
   statsFollowing: string;
   statsFollowers: string;
   statsNotFollback: string;
+  statsFans: string;
   statsMutual: string;
   statsRate: string;
   historyTitle: string;
@@ -100,12 +103,15 @@ const en: Strings = {
     "Note: If an account shows 'Something went wrong' on Instagram, the account has been deactivated, deleted, or suspended. Meta still retains old friendships in following.json, which is why they appear under Not following back.",
   confirmUnfollow: "Mark as unfollowed?",
   unfollowedBadge: "Unfollowed",
+  confirmFollow: "Mark as followed?",
+  followedBadge: "Followed",
   sortDefault: "Default order",
   sortAz: "Username (A - Z)",
   sortZa: "Username (Z - A)",
   statsFollowing: "Following",
   statsFollowers: "Followers",
   statsNotFollback: "Not following back",
+  statsFans: "Fans",
   statsMutual: "Mutual",
   statsRate: "Followback rate",
   historyTitle: "Local comparison history",
@@ -167,12 +173,15 @@ const id: Strings = {
     "Catatan: Jika akun bertuliskan 'Something went wrong', akun tersebut telah dinonaktifkan, dihapus, atau dibanned. Meta tetap menyimpan relasi lama di following.json sehingga mereka terdeteksi di daftar Tidak follback.",
   confirmUnfollow: "Tandai sudah unfollow?",
   unfollowedBadge: "Sudah di-unfollow",
+  confirmFollow: "Tandai sudah follow?",
+  followedBadge: "Sudah di-follow",
   sortDefault: "Urutan default",
   sortAz: "Username (A - Z)",
   sortZa: "Username (Z - A)",
   statsFollowing: "Mengikuti",
   statsFollowers: "Pengikut",
   statsNotFollback: "Tidak follback",
+  statsFans: "Fans",
   statsMutual: "Mutual",
   statsRate: "Rasio follback",
   historyTitle: "Riwayat perbandingan lokal",

@@ -61,20 +61,51 @@ function nonEmptyString(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-function usernameFromEntry(entry: Entry): string {
-  const title = nonEmptyString(entry.title);
+function usernameFromEntry(entry: Entry | unknown): string {
+  if (typeof entry === "string") return normalizeUsername(entry);
+  if (!entry || typeof entry !== "object") return "";
+
+  const rec = entry as Record<string, unknown>;
+
+  const title = nonEmptyString(rec.title);
+  if (title && !title.includes(" ") && !title.includes("/")) {
+    return normalizeUsername(title);
+  }
+
+  const items = Array.isArray(rec.string_list_data)
+    ? (rec.string_list_data as StringListItem[])
+    : [];
+  for (const item of items) {
+    if (item && typeof item === "object") {
+      const itemRec = item as Record<string, unknown>;
+      const val = nonEmptyString(itemRec.value);
+      if (val) return normalizeUsername(val);
+      const href = nonEmptyString(itemRec.href);
+      if (href) {
+        const u = usernameFromHref(href);
+        if (u) return normalizeUsername(u);
+      }
+    }
+  }
+
+  const val = nonEmptyString(rec.value);
+  if (val) return normalizeUsername(val);
+
+  const u = nonEmptyString(rec.username);
+  if (u) return normalizeUsername(u);
+
+  const name = nonEmptyString(rec.name);
+  if (name && !name.includes(" ") && !name.includes("/")) return normalizeUsername(name);
+
+  const href = nonEmptyString(rec.href);
+  if (href) {
+    const fromHref = usernameFromHref(href);
+    if (fromHref) return normalizeUsername(fromHref);
+  }
+
   if (title) return normalizeUsername(title);
 
-  const items = Array.isArray(entry.string_list_data)
-    ? (entry.string_list_data as StringListItem[])
-    : [];
-  const first = items[0];
-  if (!first || typeof first !== "object") return "";
-
-  const value = nonEmptyString(first.value);
-  if (value) return normalizeUsername(value);
-
-  return normalizeUsername(usernameFromHref(nonEmptyString(first.href)));
+  return "";
 }
 
 function extractEntries(data: unknown): Entry[] {
@@ -88,6 +119,7 @@ function extractEntries(data: unknown): Entry[] {
     for (const key of Object.keys(rec)) {
       if (Array.isArray(rec[key])) return rec[key] as Entry[];
     }
+    if (Object.keys(rec).length === 0) return [];
   }
   throw new ParseError(
     "unknown_format",
@@ -100,7 +132,7 @@ export function parseUsernames(data: unknown): Set<string> {
   const entries = extractEntries(data);
   const result = new Set<string>();
   for (const entry of entries) {
-    if (!entry || typeof entry !== "object") {
+    if (!entry || (typeof entry !== "object" && typeof entry !== "string")) {
       throw new ParseError("bad_entry", "An entry in the JSON file is not an object.");
     }
     const name = usernameFromEntry(entry);
@@ -132,41 +164,74 @@ export function detectCategory(data: unknown, filename = ""): FileCategory | nul
 
   if (fn.includes("following") && !fn.includes("followers")) return "following";
   if (fn.includes("followers")) return "followers";
-  if (fn.includes("pending_follow")) return "pendingRequests";
+  if (
+    fn.includes("pending_follow") ||
+    fn.includes("pending_requests") ||
+    fn.includes("pending_request") ||
+    fn.includes("follow_requests_sent")
+  ) {
+    return "pendingRequests";
+  }
   if (
     fn.includes("recently_unfollowed") ||
-    fn.includes("recently_unfollowed_accounts") ||
-    fn.includes("recently_unfollowed_profiles")
+    fn.includes("unfollowed_accounts") ||
+    fn.includes("unfollowed_users") ||
+    fn.includes("unfollowed_profiles")
   ) {
     return "recentlyUnfollowed";
   }
   if (fn.includes("close_friends")) return "closeFriends";
   if (fn.includes("blocked")) return "blockedProfiles";
   if (fn.includes("restricted")) return "restrictedProfiles";
-  if (fn.includes("hide_story") || fn.includes("hide_stories")) return "hideStoryFrom";
-  if (fn.includes("recent_follow")) return "recentRequests";
-  if (fn.includes("removed_suggestions") || fn.includes("dismissed_suggested")) {
+  if (fn.includes("hide_story") || fn.includes("hide_stories") || fn.includes("story_settings")) return "hideStoryFrom";
+  if (fn.includes("recent_follow") || fn.includes("follow_requests_received")) return "recentRequests";
+  if (
+    fn.includes("removed_suggestions") ||
+    fn.includes("dismissed_suggested") ||
+    fn.includes("dismissed_suggestions") ||
+    fn.includes("suggested_users")
+  ) {
     return "removedSuggestions";
   }
 
   if (data && typeof data === "object" && !Array.isArray(data)) {
     const rec = data as Record<string, unknown>;
-    if (Array.isArray(rec.relationships_following)) return "following";
-    if (Array.isArray(rec.relationships_followers)) return "followers";
+    if (Array.isArray(rec.relationships_following) || Array.isArray(rec.following)) return "following";
+    if (Array.isArray(rec.relationships_followers) || Array.isArray(rec.followers)) return "followers";
     if (
       Array.isArray(rec.relationships_permanent_follow_requests) ||
       Array.isArray(rec.relationships_persistent_follow_requests) ||
-      Array.isArray(rec.relationships_follow_requests_sent)
+      Array.isArray(rec.relationships_follow_requests_sent) ||
+      Array.isArray(rec.pending_follow_requests)
     ) {
       return "pendingRequests";
     }
-    if (Array.isArray(rec.relationships_unfollowed_users)) return "recentlyUnfollowed";
-    if (Array.isArray(rec.relationships_close_friends)) return "closeFriends";
-    if (Array.isArray(rec.relationships_blocked_users)) return "blockedProfiles";
-    if (Array.isArray(rec.relationships_restricted_users)) return "restrictedProfiles";
-    if (Array.isArray(rec.relationships_hide_stories_from)) return "hideStoryFrom";
-    if (Array.isArray(rec.relationships_follow_requests_received)) return "recentRequests";
-    if (Array.isArray(rec.relationships_dismissed_suggested_users)) return "removedSuggestions";
+    if (
+      Array.isArray(rec.relationships_unfollowed_users) ||
+      Array.isArray(rec.recently_unfollowed_profiles) ||
+      Array.isArray(rec.recently_unfollowed_accounts)
+    ) {
+      return "recentlyUnfollowed";
+    }
+    if (Array.isArray(rec.relationships_close_friends) || Array.isArray(rec.close_friends)) return "closeFriends";
+    if (Array.isArray(rec.relationships_blocked_users) || Array.isArray(rec.blocked_profiles) || Array.isArray(rec.blocked_accounts)) return "blockedProfiles";
+    if (Array.isArray(rec.relationships_restricted_users) || Array.isArray(rec.restricted_profiles) || Array.isArray(rec.restricted_accounts)) return "restrictedProfiles";
+    if (
+      Array.isArray(rec.relationships_hide_stories_from) ||
+      Array.isArray(rec.relationships_hide_story_from) ||
+      Array.isArray(rec.hide_stories_from) ||
+      Array.isArray(rec.hide_story_from)
+    ) {
+      return "hideStoryFrom";
+    }
+    if (Array.isArray(rec.relationships_follow_requests_received) || Array.isArray(rec.recent_follow_requests)) return "recentRequests";
+    if (
+      Array.isArray(rec.relationships_dismissed_suggested_users) ||
+      Array.isArray(rec.dismissed_suggested_users) ||
+      Array.isArray(rec.removed_suggestions)
+    ) {
+      return "removedSuggestions";
+    }
   }
 
   if (Array.isArray(data)) return "followers";

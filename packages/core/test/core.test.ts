@@ -58,6 +58,19 @@ describe("parseUsernames", () => {
     expect(() => parseText("{bukan json")).toThrow(ParseError);
   });
 
+  it("membaca format array string username langsung", () => {
+    expect([...parseUsernames(["john", "doe"])].sort()).toEqual(["doe", "john"]);
+  });
+
+  it("membaca format objek dengan properti username/value/href langsung", () => {
+    const data = [
+      { username: "user_a" },
+      { value: "user_b" },
+      { href: "https://www.instagram.com/user_c" },
+    ];
+    expect([...parseUsernames(data)].sort()).toEqual(["user_a", "user_b", "user_c"]);
+  });
+
   it("menolak entri non-objek", () => {
     expect(() => parseUsernames([1])).toThrow(ParseError);
   });
@@ -113,6 +126,21 @@ describe("parseFiles", () => {
     expect(res.pendingRequests).toEqual(["pending_user"]);
     const csv = toCsv(res);
     expect(csv).toContain("pending_user,permintaan_tertunda");
+  });
+
+  it("tetap menyertakan kategori kosong jika filenya diunggah", () => {
+    const { followers, following, extras } = parseFiles([
+      { name: "followers_1.json", text: JSON.stringify(followersJson) },
+      { name: "following.json", text: JSON.stringify(followingJson) },
+      { name: "blocked_profiles.json", text: JSON.stringify({}) },
+    ]);
+    expect([...followers].sort()).toEqual(["alice", "bob"]);
+    expect([...following].sort()).toEqual(["bob", "carol"]);
+    expect(extras.blockedProfiles).toBeDefined();
+    expect([...extras.blockedProfiles!]).toEqual([]);
+
+    const res = diff(followers, following, extras);
+    expect(res.blockedProfiles).toEqual([]);
   });
 });
 

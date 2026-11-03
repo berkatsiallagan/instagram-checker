@@ -498,6 +498,17 @@ a {
   flex-shrink: 0;
 }
 
+.badge-followed {
+  font-size: 11px;
+  color: var(--accent);
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.stat-card.clickable {
+  cursor: pointer;
+}
+
 .list li span {
   min-width: 0;
   overflow: hidden;

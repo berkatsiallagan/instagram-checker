@@ -58,7 +58,7 @@ export function diff(
 
   for (const k of extraKeys) {
     const set = extras[k];
-    if (set && set.size > 0) {
+    if (set !== undefined) {
       res[k] = sort([...set]);
     }
   }
