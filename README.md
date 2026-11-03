@@ -3,7 +3,7 @@
 # Follback Checker
 
 Find out who does not follow you back on Instagram, right on your device.<br>
-No server, no account, no tracking.
+Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-10%20passing-1a3a6b?style=flat-square)](packages/core/test/core.test.ts)
@@ -11,13 +11,14 @@ No server, no account, no tracking.
 [![Status](https://img.shields.io/badge/status-in%20development-6b7280?style=flat-square)](#status)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
 
-**English** · [Bahasa Indonesia](README.id.md)
-
-[Features](#features) · [Usage](#usage) · [Privacy](#privacy) · [Architecture](#architecture) · [Development](#development) · [Roadmap](#roadmap)
+No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
 
 </div>
 
 ---
+
+<details open>
+<summary><b>English</b></summary>
 
 ## About
 
@@ -58,8 +59,6 @@ The extension reads data through your own logged-in Instagram session, with dela
 
 ## Privacy
 
-The privacy claims of this project can be verified by anyone:
-
 - No backend, database, account, or analytics.
 - Files are read in the browser and kept in memory only.
 - The website uses a Content Security Policy that blocks outgoing connections.
@@ -80,8 +79,6 @@ More details in [PRIVACY.md](PRIVACY.md).
 └── PRIVACY.md
 ```
 
-Data flow:
-
 ```mermaid
 flowchart LR
   A["JSON file or IG session"] --> B["parse"]
@@ -89,8 +86,6 @@ flowchart LR
   C --> D["Result view"]
   C --> E["CSV export"]
 ```
-
-The core has no runtime dependencies and performs no I/O, which makes it easy to test and reuse in both the website and the extension.
 
 ## Development
 
@@ -103,8 +98,6 @@ npm install
 npm test
 ```
 
-Using the core directly:
-
 ```ts
 import { parseText, diff } from "@follback/core";
 
@@ -115,8 +108,6 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 ```
 
 ## Status
-
-The project is under development. What is done and what is not:
 
 | Component | Status |
 |---|---|
@@ -135,12 +126,110 @@ The project is under development. What is done and what is not:
 
 ## Contributing
 
-Issues and pull requests are welcome. For large changes, open an issue first so the direction can be discussed. Make sure `npm test` passes before sending a PR. Translations of this README are also welcome.
+Issues and pull requests are welcome. For large changes, open an issue first. Make sure `npm test` passes before sending a PR. Translations are also welcome.
 
 ## Disclaimer
 
 This project is not affiliated with Instagram or Meta. Use it according to Instagram's terms of service and at your own responsibility.
 
-## License
+</details>
+
+<details>
+<summary><b>Bahasa Indonesia</b></summary>
+
+## Tentang
+
+Follback Checker membandingkan daftar followers dan following Instagram milikmu, lalu menampilkan tiga hal: siapa yang tidak follow balik, siapa yang follow kamu tapi belum kamu follow, dan siapa yang saling follow.
+
+Proyek ini punya dua bentuk yang memakai satu core logic yang sama:
+
+| Bentuk | Cara kerja | Cocok untuk |
+|---|---|---|
+| **Website** | Drag-drop file JSON dari export resmi Instagram | Siapa saja, tanpa memasang apa pun |
+| **Extension browser** | Satu tombol, membaca data lewat sesi login milikmu | Pengecekan cepat tanpa mengunduh export |
+
+Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana pun.
+
+## Fitur
+
+- Tiga tampilan hasil: **Tidak follback**, **Fans**, dan **Mutual**
+- Pencarian cepat di dalam hasil
+- Ekspor ke CSV, dengan perlindungan formula injection untuk spreadsheet
+- Mendukung banyak file sekaligus (`followers_1.json`, `followers_2.json`, dan seterusnya)
+- Pesan error yang jelas saat format file tidak dikenal
+- Tampilan satu field, mode terang dan gelap mengikuti sistem
+
+## Cara pakai
+
+### Website (drag-drop JSON)
+
+1. Di Instagram buka **Pengaturan > Pusat Akun > Informasi dan izin kamu > Unduh informasi kamu**.
+2. Pilih **Beberapa informasi kamu**, centang **Followers dan following**, format **JSON**.
+3. Setelah file siap, unduh dan ekstrak arsipnya.
+4. Seret `followers_1.json` dan `following.json` (dari folder `connections/followers_and_following`) ke kotak di halaman.
+
+> Menu Instagram bisa berubah dari waktu ke waktu. Jika langkah di atas tidak cocok, cari opsi "Download your information".
+
+### Extension
+
+Extension membaca data lewat sesi login Instagram milikmu dengan jeda antar permintaan dan batas maksimum. Ada risiko pembatasan akun dari Instagram jika dipakai berlebihan, jadi jalur JSON tetap disarankan sebagai pilihan utama.
+
+## Privasi
+
+- Tidak ada backend, database, akun, atau analytics.
+- File dibaca di browser dan hanya disimpan di memori.
+- Website memakai Content Security Policy yang memblokir koneksi keluar.
+- Extension hanya berbicara dengan `instagram.com`, dan hanya saat kamu menekan tombol.
+- Seluruh kode terbuka dan tidak ada dependency runtime pihak ketiga di core.
+
+Selengkapnya ada di [PRIVACY.md](PRIVACY.md).
+
+## Arsitektur
+
+Struktur repo dan alur data sama dengan versi English di atas. Core tidak punya dependency runtime dan tidak melakukan I/O, sehingga mudah diuji dan dipakai ulang oleh website maupun extension.
+
+## Pengembangan
+
+Prasyarat: Node.js 20 atau lebih baru.
+
+```bash
+git clone https://github.com/berkatsiallagan/instagram-checker.git
+cd instagram-checker
+npm install
+npm test
+```
+
+## Status
+
+| Komponen | Status |
+|---|---|
+| Core (parser, diff, CSV) dan test | Selesai |
+| Website | Belum dimulai |
+| Extension | Belum dimulai |
+
+## Roadmap
+
+- [x] Core parser, diff, dan ekspor CSV
+- [ ] UI bersama (satu field, tanpa dekorasi)
+- [ ] Website statis di Cloudflare Pages
+- [ ] Extension mode JSON
+- [ ] Extension mode baca langsung dari sesi login
+- [ ] Rilis di GitHub Releases, Firefox Add-ons, dan Edge Add-ons
+
+## Kontribusi
+
+Issue dan pull request diterima. Untuk perubahan besar, buka issue dulu. Pastikan `npm test` lolos sebelum mengirim PR. Terjemahan ke bahasa lain juga diterima.
+
+## Disclaimer
+
+Proyek ini tidak berafiliasi dengan Instagram atau Meta. Gunakan sesuai ketentuan layanan Instagram dan tanggung jawab sendiri.
+
+</details>
+
+---
+
+<div align="center">
 
 [MIT](LICENSE) &copy; 2026 Berkat Tua Siallagan
+
+</div>
