@@ -7,7 +7,7 @@ Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 [![Live App](https://img.shields.io/badge/website-ig.berkatsiallagan.com-1a3a6b?style=flat-square)](https://ig.berkatsiallagan.com/)
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-34%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
+[![Tests](https://img.shields.io/badge/tests-38%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
 [![Release](https://img.shields.io/badge/release-v0.2.4-1a3a6b?style=flat-square)](https://github.com/berkatsiallagan/instagram-checker/releases)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
@@ -39,6 +39,9 @@ All processing happens in the browser. No data is sent to any server.
 ## Features
 
 - **Full Relationship Categories:** Displays **Not following back**, **Fans**, **Mutual**, and all 8 Meta connection categories (*Pending requests*, *Recently unfollowed*, *Close friends*, *Blocked*, *Restricted*, *Hide story from*, *Recent requests*, *Dismissed suggestions*).
+- **Direct Full Tab Extension:** The extension runs entirely in a dedicated browser tab via background service worker, avoiding accidental closes or losing progress.
+- **Cross-Tab Auto Detection:** Automatically communicates with any open `instagram.com` tab in your browser without requiring you to switch tabs.
+- **Background Fetch Persistence:** Background fetching continues uninterrupted on the Instagram tab and restores results seamlessly upon return.
 - **Interactive Metric Cards:** Click any statistic card to switch directly to that category tab.
 - **Instant Unfollow Workflow:** One-click instant unfollow button on the *Not following back* tab that opens the profile and marks it as unfollowed with strikethrough.
 - **Hide Unfollowed Filter:** Toggle checkbox to instantly hide accounts you've already unfollowed for clean progress tracking.
@@ -46,6 +49,7 @@ All processing happens in the browser. No data is sent to any server.
 - **Local Persistence & Privacy:** Analysis state and unfollow progress are automatically restored on next visit via `localStorage`. Never leaves your device.
 - **Hybrid Upload:** Drop single JSON files or the whole `followers_and_following` export folder directly.
 - **CSV Export:** Clean CSV download protected against spreadsheet formula injection.
+- **Legal & Compliance:** Built-in Privacy Policy and Terms of Service ensuring transparency and GDPR/CCPA alignment.
 
 ## Usage
 
@@ -70,6 +74,8 @@ All processing happens in the browser. No data is sent to any server.
 2. Extract the ZIP file.
 3. In Chrome/Edge/Brave, go to `chrome://extensions` and enable **Developer mode** in the top right.
 4. Click **Load unpacked** and select the extracted folder.
+5. Make sure you are logged in to `https://www.instagram.com` in one of your browser tabs.
+6. Click the Instagram Checker icon in your browser toolbar. It will open directly in a spacious full browser tab. Click **Check** to start analyzing.
 
 ## Privacy
 
@@ -86,10 +92,13 @@ More details in [PRIVACY.md](PRIVACY.md).
 ```
 .
 ├── packages/
-│   └── core/          Parser, diff, and CSV export (plain TypeScript)
+│   ├── core/          Parser, diff, and CSV export (plain TypeScript)
+│   └── ui/            Shared UI components, i18n, and styles
 ├── apps/
 │   ├── web/           Static website (Next.js static export)
-│   └── extension/     Manifest V3 extension
+│   └── extension/     Manifest V3 extension (Service worker + Full-tab UI + Content script)
+├── docs/
+│   └── legal/         Privacy Policy, Terms of Service, Cookie Policy
 └── PRIVACY.md
 ```
 
@@ -168,6 +177,9 @@ Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana 
 ## Fitur
 
 - **Kategori Relasi Lengkap:** Menampilkan **Tidak follback**, **Fans**, **Mutual**, dan 8 kategori file koneksi Meta (*Permintaan tertunda*, *Baru di-unfollow*, *Teman dekat*, *Diblokir*, *Dibatasi*, *Sembunyikan cerita*, *Permintaan baru*, *Saran dihapus*).
+- **Ekstensi Tab Penuh Konsisten:** Ekstensi selalu berjalan langsung di tab browser penuh melalui service worker, tanpa modal popup kecil yang rentan tertutup sendiri.
+- **Deteksi Otomatis Lintas Tab:** Otomatis mendeteksi dan berkomunikasi dengan tab `instagram.com` yang sedang terbuka di perambanmu.
+- **Ketahanan Proses di Latar Belakang:** Pengambilan data di tab Instagram tetap berjalan lancar dan otomatis memulihkan hasil saat kamu kembali.
 - **Kartu Statistik Interaktif:** Klik kartu metrik apa saja untuk langsung beralih ke tab kategori tersebut.
 - **Unfollow Instan:** Tombol satu kali klik di tab *Tidak follback* yang langsung membuka profil akun dan menandai status sudah di-unfollow.
 - **Sembunyikan Akun Unfollowed:** Toggle centang untuk menyembunyikan akun yang sudah di-unfollow agar daftar tetap rapi dan fokus ke sisa akun.
@@ -175,6 +187,7 @@ Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana 
 - **Penyimpanan Lokal & Privat:** Hasil analisis dan status unfollow otomatis tersimpan di `localStorage` peramban. Nol data keluar dari perangkatmu.
 - **Unggah Hybrid:** Dukung unggah file satuan maupun langsung satu folder `followers_and_following`.
 - **Ekspor CSV:** Ekspor data aman dengan sanitasi pencegahan formula injection di Excel/Sheets.
+- **Halaman Legal Terintegrasi:** Dilengkapi Kebijakan Privasi (`/privacy`) dan Syarat Ketentuan (`/terms`) yang transparan.
 
 ## Cara Pakai
 
@@ -199,6 +212,8 @@ Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana 
 2. Ekstrak file ZIP tersebut ke sebuah folder.
 3. Di browser Chrome/Edge/Brave, buka `chrome://extensions` dan aktifkan **Developer mode** di pojok kanan atas.
 4. Klik **Load unpacked** dan pilih folder hasil ekstrak tadi.
+5. Pastikan kamu sudah login di `https://www.instagram.com` pada salah satu tab browser.
+6. Klik ikon Instagram Checker di toolbar browser. Aplikasi akan langsung membuka tab peramban penuh yang lega. Klik **Cek** untuk mulai menganalisis.
 
 ## Privasi
 
