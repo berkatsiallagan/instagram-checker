@@ -44,6 +44,8 @@ export interface Strings {
   extensionBannerPrefix: string;
   extensionDownloadText: string;
   extensionBannerSuffix: string;
+  extInstallGuideTitle: string;
+  extInstallSteps: string[];
   pwaInstall: string;
   pwaInstallTitle: string;
   pwaInstallGuideIos: string;
@@ -115,6 +117,13 @@ const en: Strings = {
   extensionBannerPrefix: "Prefer not to download JSON files? You can",
   extensionDownloadText: "Download our Chrome Extension",
   extensionBannerSuffix: "to check directly in your browser with 1 click.",
+  extInstallGuideTitle: "How to install the extension in your browser",
+  extInstallSteps: [
+    "Download and extract the ZIP file to a folder on your computer.",
+    "Open chrome://extensions (or edge://extensions) in your browser and enable Developer mode in the top right.",
+    "Click Load unpacked and select the extracted folder.",
+    "Make sure instagram.com is open in another tab, then click the extension icon to start.",
+  ],
   pwaInstall: "Install App",
   pwaInstallTitle: "Install Instagram Checker as an application on your device",
   pwaInstallGuideIos: "To install: tap the Share button in Safari, then select 'Add to Home Screen'.",
@@ -220,6 +229,13 @@ const id: Strings = {
   extensionBannerPrefix: "Tidak mau repot mengunduh file JSON?",
   extensionDownloadText: "Unduh Ekstensi Chrome",
   extensionBannerSuffix: "untuk cek langsung dari peramban dalam 1 klik.",
+  extInstallGuideTitle: "Cara pasang ekstensi di browser (Chrome / Edge / Brave)",
+  extInstallSteps: [
+    "Unduh dan ekstrak file ZIP ke salah satu folder di komputermu.",
+    "Buka chrome://extensions (atau edge://extensions) di peramban dan aktifkan Developer mode di kanan atas.",
+    "Klik Load unpacked (Muat yang belum dibongkar) lalu pilih folder hasil ekstrak tadi.",
+    "Pastikan tab instagram.com terbuka di tab lain, lalu klik ikon ekstensi untuk mulai.",
+  ],
   pwaInstall: "Pasang Aplikasi",
   pwaInstallTitle: "Pasang Instagram Checker sebagai aplikasi di perangkat Anda",
   pwaInstallGuideIos: "Untuk memasang: ketuk tombol Bagikan (Share) di Safari, lalu pilih 'Tambahkan ke Layar Utama'.",

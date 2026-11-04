@@ -202,8 +202,12 @@ export function mountApp(
       typeof window !== "undefined" &&
       (window.matchMedia("(display-mode: standalone)").matches ||
         window.matchMedia("(display-mode: fullscreen)").matches ||
+        window.matchMedia("(display-mode: minimal-ui)").matches ||
+        window.matchMedia("(display-mode: window-controls-overlay)").matches ||
         (window.navigator as unknown as { standalone?: boolean }).standalone === true ||
         document.referrer.includes("android-app://") ||
+        window.location.search.includes("mode=pwa") ||
+        window.location.hash.includes("pwa") ||
         localStorage.getItem("pwa_installed") === "true");
 
     pwaBtn = el(
@@ -228,7 +232,7 @@ export function mountApp(
           await win.__deferredPwaPrompt.prompt();
           const choice = await win.__deferredPwaPrompt.userChoice;
           if (choice.outcome === "accepted") {
-            if (pwaBtn) pwaBtn.hidden = true;
+            if (pwaBtn) pwaBtn.remove();
             try {
               localStorage.setItem("pwa_installed", "true");
             } catch {
@@ -253,11 +257,14 @@ export function mountApp(
       e.preventDefault();
       (window as unknown as { __deferredPwaPrompt?: BeforeInstallPromptEvent }).__deferredPwaPrompt =
         e as BeforeInstallPromptEvent;
-      if (pwaBtn && !isPwa) pwaBtn.hidden = false;
+      if (pwaBtn && !isPwa) {
+        if (!pwaBtn.isConnected) topBar.prepend(pwaBtn);
+        pwaBtn.hidden = false;
+      }
     });
 
     window.addEventListener("appinstalled", () => {
-      if (pwaBtn) pwaBtn.hidden = true;
+      if (pwaBtn) pwaBtn.remove();
       try {
         localStorage.setItem("pwa_installed", "true");
       } catch {
@@ -265,7 +272,9 @@ export function mountApp(
       }
     });
 
-    topBar.prepend(pwaBtn);
+    if (!isPwa) {
+      topBar.prepend(pwaBtn);
+    }
   }
 
   if (opts.onOpenFullTab) {
@@ -530,13 +539,34 @@ export function mountApp(
       "https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip",
       t.extensionDownloadText
     );
-    extensionBanner = el(
+    const extText = el(
       "div",
-      { className: "banner-extension" },
+      { className: "banner-extension-text" },
       icon("download"),
       el("span", {}, `${t.extensionBannerPrefix} `),
       extLink,
       el("span", {}, ` ${t.extensionBannerSuffix}`)
+    );
+    const extGuide = el(
+      "details",
+      { className: "ext-guide" },
+      el(
+        "summary",
+        { className: "ext-guide-summary" },
+        icon("help"),
+        el("span", {}, t.extInstallGuideTitle)
+      ),
+      el(
+        "ol",
+        { className: "ext-guide-steps" },
+        ...t.extInstallSteps.map((s) => el("li", {}, s))
+      )
+    );
+    extensionBanner = el(
+      "div",
+      { className: "banner-extension" },
+      extText,
+      extGuide
     );
   }
 

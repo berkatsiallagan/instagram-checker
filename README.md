@@ -68,14 +68,29 @@ All processing happens in the browser. No data is sent to any server.
 - **CSV Export:** Clean CSV download protected against spreadsheet formula injection.
 - **Legal & Compliance:** Built-in Privacy Policy and Terms of Service ensuring transparency and GDPR/CCPA alignment.
 
-## Extension Installation (Manual from GitHub Releases)
+## How to Install the Browser Extension
 
-1. Download `instagram-checker-chrome.zip` (for Chrome/Edge/Brave) or `instagram-checker-firefox.zip` from [GitHub Releases](https://github.com/berkatsiallagan/instagram-checker/releases).
-2. Extract the ZIP file.
-3. In Chrome/Edge/Brave, go to `chrome://extensions` and enable **Developer mode** in the top right.
+You can install the extension manually on any desktop browser:
+
+### Chrome / Brave / Opera / Vivaldi
+1. Download [instagram-checker-chrome.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip) from GitHub Releases.
+2. Extract the ZIP file into a folder on your computer.
+3. Open `chrome://extensions` in your browser.
+4. Turn on **Developer mode** in the top-right corner.
+5. Click **Load unpacked** in the top-left and select the extracted folder.
+6. Make sure `https://www.instagram.com` is open and logged in in another tab.
+7. Click the Instagram Checker icon in your toolbar (pin it from the puzzle menu) to open the full tab, then click **Check**.
+
+### Microsoft Edge
+1. Download [instagram-checker-chrome.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip) and extract it.
+2. Open `edge://extensions` in Microsoft Edge.
+3. Turn on **Developer mode** in the left sidebar.
 4. Click **Load unpacked** and select the extracted folder.
-5. Make sure you are logged in to `https://www.instagram.com` in one of your browser tabs.
-6. Click the Instagram Checker icon in your browser toolbar. It will open directly in a spacious full browser tab. Click **Check** to start analyzing.
+
+### Mozilla Firefox
+1. Download [instagram-checker-firefox.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-firefox.zip).
+2. Open `about:debugging#/runtime/this-firefox` in Firefox.
+3. Click **Load Temporary Add-on...** and select the ZIP file.
 
 ## Privacy
 
@@ -204,14 +219,29 @@ Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana 
 - **Ekspor CSV:** Ekspor data aman dengan sanitasi pencegahan formula injection di Excel/Sheets.
 - **Halaman Legal Terintegrasi:** Dilengkapi Kebijakan Privasi (`/privacy`) dan Syarat Ketentuan (`/terms`) yang transparan.
 
-## Pemasangan Ekstensi (Manual dari GitHub Releases)
+## Cara Pasang Ekstensi di Browser
 
-1. Unduh file `instagram-checker-chrome.zip` (untuk Chrome/Edge/Brave) atau `instagram-checker-firefox.zip` dari [GitHub Releases](https://github.com/berkatsiallagan/instagram-checker/releases).
-2. Ekstrak file ZIP tersebut ke sebuah folder.
-3. Di browser Chrome/Edge/Brave, buka `chrome://extensions` dan aktifkan **Developer mode** di pojok kanan atas.
-4. Klik **Load unpacked** dan pilih folder hasil ekstrak tadi.
-5. Pastikan kamu sudah login di `https://www.instagram.com` pada salah satu tab browser.
-6. Klik ikon Instagram Checker di toolbar browser. Aplikasi akan langsung membuka tab peramban penuh yang lega. Klik **Cek** untuk mulai menganalisis.
+Kamu bisa memasang ekstensi ini langsung di peramban komputer mana saja:
+
+### Chrome / Brave / Opera / Vivaldi
+1. Unduh file [instagram-checker-chrome.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip) dari GitHub Releases.
+2. Ekstrak file ZIP tersebut ke salah satu folder di komputermu.
+3. Buka alamat `chrome://extensions` di browser.
+4. Aktifkan saklar **Developer mode (Mode Pengembang)** di pojok kanan atas.
+5. Klik tombol **Load unpacked (Muat yang belum dibongkar)** di kiri atas, lalu pilih folder hasil ekstrak tadi.
+6. Pastikan tab `https://www.instagram.com` sudah terbuka dan dalam kondisi login di salah satu tab browser.
+7. Klik ikon Instagram Checker di toolbar browser (sematkan lewat menu puzzle) untuk membuka tab penuh dan klik **Cek**.
+
+### Microsoft Edge
+1. Unduh file [instagram-checker-chrome.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip) dan ekstrak filenya.
+2. Buka `edge://extensions` di Microsoft Edge.
+3. Aktifkan saklar **Developer mode** di menu sisi kiri.
+4. Klik tombol **Load unpacked** dan pilih folder hasil ekstrak.
+
+### Mozilla Firefox
+1. Unduh file [instagram-checker-firefox.zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-firefox.zip).
+2. Buka `about:debugging#/runtime/this-firefox` di Firefox.
+3. Klik **Load Temporary Add-on...** lalu pilih file ZIP tersebut.
 
 ## Privasi
 
