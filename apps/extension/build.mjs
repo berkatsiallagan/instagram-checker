@@ -8,7 +8,11 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
 await build({
-  entryPoints: { popup: "src/popup.ts", content: "src/content.ts" },
+  entryPoints: {
+    popup: "src/popup.ts",
+    content: "src/content.ts",
+    background: "src/background.ts",
+  },
   outdir: out,
   bundle: true,
   format: "iife",
@@ -24,6 +28,9 @@ if (target === "firefox") {
       id: "follback-checker@berkatsiallagan.github.io",
       data_collection_permissions: { required: ["none"] },
     },
+  };
+  manifest.background = {
+    scripts: ["background.js"],
   };
 }
 writeFileSync(`${out}/manifest.json`, JSON.stringify(manifest, null, 2));

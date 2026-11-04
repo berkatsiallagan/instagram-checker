@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Instagram Checker",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Check who does not follow you back on Instagram. Runs entirely in your browser.",
   "icons": {
     "16": "icons/icon-16.png",
@@ -10,12 +10,14 @@
   },
   "action": {
     "default_title": "Instagram Checker",
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",
       "48": "icons/icon-48.png",
       "128": "icons/icon-128.png"
     }
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "host_permissions": ["https://www.instagram.com/*"],
   "content_scripts": [

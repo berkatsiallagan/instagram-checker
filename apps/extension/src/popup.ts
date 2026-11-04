@@ -76,18 +76,8 @@ async function check(
   }
 }
 
-const isFullTab =
-  window.location.search.includes("tab=1") || window.innerWidth > 550;
-
 const mountOpts = {
   onCheck: check,
-  onOpenFullTab: isFullTab
-    ? undefined
-    : () => {
-        void chrome.tabs.create({
-          url: chrome.runtime.getURL("popup.html?tab=1"),
-        });
-      },
 };
 
 const rootEl = document.getElementById("root") as HTMLElement;
