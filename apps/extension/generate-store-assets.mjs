@@ -46,6 +46,68 @@ const promoSvg = `
 </svg>
 `.trim();
 
+// 2. Large Promo Tile (1400x560) - Microsoft Edge optional/featured
+const promoLargeSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" width="1400" height="560">
+  <defs>
+    <radialGradient id="igBgLarge" cx="18%" cy="102%" r="125%">
+      <stop offset="0%" stop-color="#FFDD55"/>
+      <stop offset="15%" stop-color="#FF543E"/>
+      <stop offset="55%" stop-color="#C837AB"/>
+      <stop offset="100%" stop-color="#4B58D8"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="560" fill="#0d1424"/>
+  <rect x="0" y="552" width="1400" height="8" fill="url(#igBgLarge)"/>
+
+  <!-- Logo (160x160) -->
+  <g transform="translate(620, 90)">
+    <rect width="160" height="160" rx="36" fill="url(#igBgLarge)"/>
+    <rect x="28" y="28" width="104" height="104" rx="26" fill="none" stroke="#FFFFFF" stroke-width="10"/>
+    <circle cx="112" cy="50" r="8" fill="#FFFFFF"/>
+    <circle cx="80" cy="80" r="29" fill="none" stroke="#FFFFFF" stroke-width="10"/>
+    <path d="M67 80 L77 90 L94 71" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Title & Subtitle -->
+  <text x="700" y="315" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="44" font-weight="700" fill="#FFFFFF" text-anchor="middle">Instagram Checker</text>
+  <text x="700" y="365" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="400" fill="#94A3B8" text-anchor="middle">Find out who does not follow you back on Instagram</text>
+
+  <!-- Feature tags -->
+  <g transform="translate(415, 415)">
+    <rect x="0" y="0" width="170" height="42" rx="8" fill="#1E293B"/>
+    <text x="85" y="27" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="16" font-weight="600" fill="#38BDF8" text-anchor="middle">100% Client-Side</text>
+
+    <rect x="195" y="0" width="180" height="42" rx="8" fill="#1E293B"/>
+    <text x="285" y="27" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="16" font-weight="600" fill="#34D399" text-anchor="middle">Zero Passwords</text>
+
+    <rect x="400" y="0" width="170" height="42" rx="8" fill="#1E293B"/>
+    <text x="485" y="27" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="16" font-weight="600" fill="#F472B6" text-anchor="middle">CSV Export</text>
+  </g>
+</svg>
+`.trim();
+
+// 3. Logo 300x300 - Microsoft Edge recommendation
+const logo300Svg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <radialGradient id="igBg300" cx="18%" cy="102%" r="125%">
+      <stop offset="0%" stop-color="#FFDD55"/>
+      <stop offset="15%" stop-color="#FF543E"/>
+      <stop offset="55%" stop-color="#C837AB"/>
+      <stop offset="100%" stop-color="#4B58D8"/>
+    </radialGradient>
+  </defs>
+  <rect width="300" height="300" rx="64" fill="url(#igBg300)"/>
+  <rect x="54" y="54" width="192" height="192" rx="48" fill="none" stroke="#FFFFFF" stroke-width="18"/>
+  <circle cx="206" cy="94" r="14" fill="#FFFFFF"/>
+  <circle cx="150" cy="150" r="54" fill="none" stroke="#FFFFFF" stroke-width="18"/>
+  <path d="M125 150 L144 168 L175 132" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`.trim();
+
 // 2. Screenshot (1280x800) - Edge & Firefox requirement
 const screenshotSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800">
@@ -172,19 +234,31 @@ const screenshotSvg = `
 async function run() {
   console.log("Generating promotional assets...");
 
-  // 1. Promo tile 440x280
+  // 1. Promo tile 440x280 (Small promotional tile)
   await sharp(Buffer.from(promoSvg))
     .png()
     .toFile(join(outDir, "promo-440x280.png"));
   console.log("Created promo-440x280.png");
 
-  // 2. Screenshot 1280x800
+  // 2. Large promo tile 1400x560 (Large promotional tile)
+  await sharp(Buffer.from(promoLargeSvg))
+    .png()
+    .toFile(join(outDir, "promo-large-1400x560.png"));
+  console.log("Created promo-large-1400x560.png");
+
+  // 3. Store logo 300x300 (Recommended size for Edge logo)
+  await sharp(Buffer.from(logo300Svg))
+    .png()
+    .toFile(join(outDir, "logo-300x300.png"));
+  console.log("Created logo-300x300.png");
+
+  // 4. Screenshot 1280x800
   await sharp(Buffer.from(screenshotSvg))
     .png()
     .toFile(join(outDir, "screenshot-1280x800.png"));
   console.log("Created screenshot-1280x800.png");
 
-  // 3. Store icon 128x128
+  // 5. Store icon 128x128
   await sharp(join(__dirname, "icons", "icon-128.png"))
     .toFile(join(outDir, "icon-128.png"));
   console.log("Created icon-128.png");
