@@ -7,5 +7,5 @@ export const AUTHOR_NAME = "Berkat Tua Siallagan";
 export const AUTHOR_SITE = "berkatsiallagan.com";
 export const AUTHOR_URL = "https://berkatsiallagan.com";
 
-export const VERSION = "0.2.2";
+export const VERSION = "0.2.3";
 export const YEAR = 2026;

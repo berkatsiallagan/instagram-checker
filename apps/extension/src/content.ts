@@ -23,8 +23,17 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const jitter = () =>
   MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);
 
+let currentProgress = "";
+
 function report(text: string): void {
-  void chrome.runtime.sendMessage({ type: "follback-progress", text });
+  currentProgress = text;
+  try {
+    void chrome.runtime.sendMessage({ type: "follback-progress", text }).catch(() => {
+      // Popup mungkin sedang tertutup, tidak apa-apa
+    });
+  } catch {
+    // abaikan jika runtime receiver tidak ada
+  }
 }
 
 async function fetchList(
@@ -78,45 +87,122 @@ async function fetchList(
   return [...names];
 }
 
-let running = false;
+interface SavedResult {
+  time: number;
+  followers: string[];
+  following: string[];
+}
+
+const STORAGE_SESSION_KEY = "__follback_last_result";
+let lastResult: SavedResult | null = null;
+try {
+  const stored = sessionStorage.getItem(STORAGE_SESSION_KEY);
+  if (stored) {
+    lastResult = JSON.parse(stored);
+  }
+} catch {
+  // ignore
+}
+
+let runningPromise: Promise<SavedResult> | null = null;
+
+async function executeFetch(userId: string, csrf: string): Promise<SavedResult> {
+  report("Tahap 1/2: Memeriksa followers...");
+  const followers = await fetchList("followers", userId, csrf);
+  await sleep(jitter());
+  report("Tahap 2/2: Memeriksa following...");
+  const following = await fetchList("following", userId, csrf);
+
+  const res: SavedResult = {
+    time: Date.now(),
+    followers,
+    following,
+  };
+  lastResult = res;
+  try {
+    sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(res));
+  } catch {
+    // ignore
+  }
+  return res;
+}
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-  if (!msg || msg.type !== "follback-fetch") return false;
+  if (!msg || typeof msg !== "object") return false;
 
-  if (running) {
-    sendResponse({ ok: false, error: "Pengecekan masih berjalan." });
+  // 1. Permintaan status saat ini (untuk sinkronisasi popup yang baru dibuka)
+  if (msg.type === "follback-get-state") {
+    if (runningPromise) {
+      sendResponse({ ok: true, status: "running", progress: currentProgress });
+    } else if (lastResult) {
+      sendResponse({ ok: true, status: "done", result: lastResult });
+    } else {
+      sendResponse({ ok: true, status: "idle" });
+    }
     return false;
   }
 
-  const userId = cookie("ds_user_id");
-  const csrf = cookie("csrftoken");
-  if (!userId || !csrf) {
-    sendResponse({
-      ok: false,
-      error:
-        "Kamu belum login di Instagram. / You are not logged in to Instagram.",
-    });
-    return false;
-  }
+  // 2. Permintaan mulai pengecekan
+  if (msg.type === "follback-fetch") {
+    // Jika proses sudah berjalan di background, sambungkan pemanggil ke proses tersebut
+    if (runningPromise) {
+      runningPromise
+        .then((res) => {
+          try {
+            sendResponse({ ok: true, followers: res.followers, following: res.following });
+          } catch {
+            // Popup mungkin ditutup sebelum selesai
+          }
+        })
+        .catch((e) => {
+          try {
+            sendResponse({
+              ok: false,
+              error: e instanceof Error ? e.message : String(e),
+            });
+          } catch {
+            // Popup mungkin ditutup
+          }
+        });
+      return true; // respons async
+    }
 
-  running = true;
-  (async () => {
-    try {
-      report("Tahap 1/2: Memeriksa followers...");
-      const followers = await fetchList("followers", userId, csrf);
-      await sleep(jitter());
-      report("Tahap 2/2: Memeriksa following...");
-      const following = await fetchList("following", userId, csrf);
-      sendResponse({ ok: true, followers, following });
-    } catch (e) {
+    const userId = cookie("ds_user_id");
+    const csrf = cookie("csrftoken");
+    if (!userId || !csrf) {
       sendResponse({
         ok: false,
-        error: e instanceof Error ? e.message : String(e),
+        error:
+          "Kamu belum login di Instagram. / You are not logged in to Instagram.",
       });
-    } finally {
-      running = false;
+      return false;
     }
-  })();
 
-  return true; // respons async
+    runningPromise = executeFetch(userId, csrf);
+    runningPromise
+      .then((res) => {
+        try {
+          sendResponse({ ok: true, followers: res.followers, following: res.following });
+        } catch {
+          // Popup mungkin ditutup
+        }
+      })
+      .catch((e) => {
+        try {
+          sendResponse({
+            ok: false,
+            error: e instanceof Error ? e.message : String(e),
+          });
+        } catch {
+          // Popup mungkin ditutup
+        }
+      })
+      .finally(() => {
+        runningPromise = null;
+      });
+
+    return true; // respons async
+  }
+
+  return false;
 });

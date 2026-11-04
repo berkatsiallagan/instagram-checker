@@ -40,6 +40,7 @@ export interface Strings {
   legalPrivacy: string;
   legalTerms: string;
   warning: string;
+  tabTip: string;
   developedBy: string;
   language: string;
   guideTitle: string;
@@ -102,6 +103,8 @@ const en: Strings = {
   legalTerms: "Terms of Service",
   warning:
     "Reading directly from Instagram may get your account rate limited. Use at your own risk.",
+  tabTip:
+    "Tip: Click 'New Tab' at the top bar if you want the check to run in a full browser tab without closing when clicking outside.",
   developedBy: "Developed by",
   language: "Language",
   guideTitle: "How to get your Instagram JSON files",
@@ -198,6 +201,8 @@ const id: Strings = {
   legalTerms: "Syarat & Ketentuan",
   warning:
     "Membaca langsung dari Instagram bisa membuat akunmu kena pembatasan. Risiko ditanggung sendiri.",
+  tabTip:
+    "Tips: Klik 'Tab Baru' di kanan atas jika ingin mengecek di tab browser penuh agar tidak tertutup saat mengklik di luar jendela.",
   developedBy: "Dikembangkan oleh",
   language: "Bahasa",
   guideTitle: "Cara mendapatkan file JSON dari Instagram",

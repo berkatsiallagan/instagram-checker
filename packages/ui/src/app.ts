@@ -452,6 +452,9 @@ export function mountApp(
   if (opts.onCheck && opts.showWarning !== false) {
     children.push(el("p", { className: "hint" }, t.warning));
   }
+  if (opts.onOpenFullTab && t.tabTip) {
+    children.push(el("p", { className: "hint" }, icon("help"), t.tabTip));
+  }
   children.push(error, section, footer);
 
   root.replaceChildren(el("main", {}, ...children));
@@ -988,5 +991,10 @@ export function mountApp(
   // initial render if restoring state
   if (result !== null || lastError !== null) {
     render();
+    if (result !== null && opts.onCheck) {
+      setTimeout(() => {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
   }
 }

@@ -9,7 +9,7 @@ Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 [![License: MIT](https://img.shields.io/github/license/berkatsiallagan/instagram-checker?style=flat-square&color=1a3a6b)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-34%20passing-1a3a6b?style=flat-square)](tests/slop.test.ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-1a3a6b?style=flat-square)](packages/core)
-[![Release](https://img.shields.io/badge/release-v0.2.2-1a3a6b?style=flat-square)](https://github.com/berkatsiallagan/instagram-checker/releases)
+[![Release](https://img.shields.io/badge/release-v0.2.3-1a3a6b?style=flat-square)](https://github.com/berkatsiallagan/instagram-checker/releases)
 [![Privacy](https://img.shields.io/badge/data-100%25%20client--side-1a3a6b?style=flat-square)](PRIVACY.md)
 
 No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
@@ -127,7 +127,7 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 |---|---|
 | Core (parser, diff, CSV) and tests | Done (100% test coverage) |
 | Shared UI and website | Live on [ig.berkatsiallagan.com](https://ig.berkatsiallagan.com/) |
-| Extension | Built (v0.2.2 available on GitHub Releases) |
+| Extension | Built (v0.2.3 available on GitHub Releases) |
 
 ## Roadmap
 
@@ -136,7 +136,7 @@ const { notFollowingBack, fans, mutual } = diff(followers, following);
 - [x] Static website on Cloudflare Pages
 - [x] Extension, JSON mode
 - [x] Extension, direct read from logged-in session
-- [x] Release v0.2.2 on GitHub Releases (Chrome and Firefox zip)
+- [x] Release v0.2.3 on GitHub Releases (Chrome and Firefox zip)
 - [ ] Publish to Microsoft Edge Add-ons and Firefox Add-ons
 
 ## Contributing
@@ -231,7 +231,7 @@ npm test
 |---|---|
 | Core (parser, diff, CSV) dan test | Selesai (100% lolos tes) |
 | UI bersama dan website | Aktif di [ig.berkatsiallagan.com](https://ig.berkatsiallagan.com/) |
-| Extension | Selesai di-bundle (v0.2.2 tersedia di GitHub Releases) |
+| Extension | Selesai di-bundle (v0.2.3 tersedia di GitHub Releases) |
 
 ## Roadmap
 
@@ -240,7 +240,7 @@ npm test
 - [x] Website statis di Cloudflare Pages
 - [x] Extension mode JSON
 - [x] Extension mode baca langsung dari sesi login
-- [x] Rilis v0.2.2 di GitHub Releases (arsip zip Chrome & Firefox)
+- [x] Rilis v0.2.3 di GitHub Releases (arsip zip Chrome & Firefox)
 - [ ] Rilis di Microsoft Edge Add-ons dan Firefox Add-ons
 
 ## Kontribusi
