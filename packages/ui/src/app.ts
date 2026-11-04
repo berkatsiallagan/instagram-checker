@@ -190,6 +190,84 @@ export function mountApp(
     el("div", { className: "lang-picker" }, icon("language"), langSelect)
   );
 
+  interface BeforeInstallPromptEvent extends Event {
+    prompt(): Promise<void>;
+    userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+  }
+
+  // Tombol Pasang PWA di kiri atas (sejajar dengan pilihan bahasa di kanan atas)
+  let pwaBtn: HTMLButtonElement | null = null;
+  if (!opts.onCheck) {
+    const isPwa =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true ||
+        document.referrer.includes("android-app://") ||
+        localStorage.getItem("pwa_installed") === "true");
+
+    pwaBtn = el(
+      "button",
+      {
+        type: "button",
+        className: "pwa-install-btn",
+        title: t.pwaInstallTitle,
+      },
+      icon("download"),
+      el("span", {}, t.pwaInstall)
+    );
+
+    if (isPwa) {
+      pwaBtn.hidden = true;
+    }
+
+    const triggerPwaInstall = async () => {
+      const win = window as unknown as { __deferredPwaPrompt?: BeforeInstallPromptEvent };
+      if (win.__deferredPwaPrompt) {
+        try {
+          await win.__deferredPwaPrompt.prompt();
+          const choice = await win.__deferredPwaPrompt.userChoice;
+          if (choice.outcome === "accepted") {
+            if (pwaBtn) pwaBtn.hidden = true;
+            try {
+              localStorage.setItem("pwa_installed", "true");
+            } catch {
+              // ignore
+            }
+          }
+        } catch (err) {
+          console.warn("PWA install error:", err);
+        }
+        win.__deferredPwaPrompt = undefined;
+      } else {
+        const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        alert(isIos ? t.pwaInstallGuideIos : t.pwaInstallGuideAndroid);
+      }
+    };
+
+    pwaBtn.addEventListener("click", () => {
+      void triggerPwaInstall();
+    });
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      (window as unknown as { __deferredPwaPrompt?: BeforeInstallPromptEvent }).__deferredPwaPrompt =
+        e as BeforeInstallPromptEvent;
+      if (pwaBtn && !isPwa) pwaBtn.hidden = false;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      if (pwaBtn) pwaBtn.hidden = true;
+      try {
+        localStorage.setItem("pwa_installed", "true");
+      } catch {
+        // ignore
+      }
+    });
+
+    topBar.prepend(pwaBtn);
+  }
+
   if (opts.onOpenFullTab) {
     const fullTabBtn = el(
       "button",
@@ -446,7 +524,25 @@ export function mountApp(
     )
   );
 
-  const children: (Node | string)[] = [topBar, title, subtitle, drop, fileInput, folderInput, guide];
+  let extensionBanner: HTMLElement | null = null;
+  if (!opts.onCheck) {
+    const extLink = externalLink(
+      "https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip",
+      t.extensionDownloadText
+    );
+    extensionBanner = el(
+      "div",
+      { className: "banner-extension" },
+      icon("download"),
+      el("span", {}, `${t.extensionBannerPrefix} `),
+      extLink,
+      el("span", {}, ` ${t.extensionBannerSuffix}`)
+    );
+  }
+
+  const children: (Node | string)[] = [topBar, title, subtitle, drop];
+  if (extensionBanner) children.push(extensionBanner);
+  children.push(fileInput, folderInput, guide);
   if (checkBtn) children.push(el("p", { className: "check-row" }, checkBtn));
   if (actions) children.push(actions);
   if (opts.onCheck && opts.showWarning !== false) {

@@ -64,10 +64,24 @@ main {
   z-index: 50;
   background: var(--bg);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 8px 0;
   margin-bottom: 12px;
+}
+
+.pwa-install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .open-full-tab-btn {
@@ -77,11 +91,30 @@ main {
 }
 
 .lang-picker {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
   color: var(--muted);
+}
+
+.banner-extension {
+  margin: 14px 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.banner-extension a {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 600;
 }
 
 .lang-select {

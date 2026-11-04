@@ -344,7 +344,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then((r)=>{r.update()})})};document.addEventListener('gesturestart',function(e){e.preventDefault()});",
+              "window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredPwaPrompt=e;});if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then((r)=>{r.update()})})};document.addEventListener('gesturestart',function(e){e.preventDefault()});",
           }}
         />
       </head>

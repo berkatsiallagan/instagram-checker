@@ -14,7 +14,9 @@ Cek siapa yang tidak follow balik di Instagram, langsung di perangkatmu.
 
 No server, no account, no tracking. / Tanpa server, tanpa akun, tanpa pelacak.
 
-**[Try the Web App](https://ig.berkatsiallagan.com/)** | **[Coba Versi Web](https://ig.berkatsiallagan.com/)**
+**[Try the Web App](https://ig.berkatsiallagan.com/)** | **[Download Extension (Chrome / Edge / Brave .zip)](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip)** | **[Download Firefox .zip](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-firefox.zip)**
+
+**[Coba Versi Web](https://ig.berkatsiallagan.com/)** | **[Unduh Ekstensi Chrome/Edge (.zip)](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-chrome.zip)** | **[Unduh Ekstensi Firefox (.zip)](https://github.com/berkatsiallagan/instagram-checker/releases/latest/download/instagram-checker-firefox.zip)**
 
 </div>
 
@@ -36,6 +38,21 @@ It comes in two forms that share one core logic:
 
 All processing happens in the browser. No data is sent to any server.
 
+## How to Get Your Instagram JSON Files
+
+1. **Open Settings Menu**
+   Go to your Instagram profile, tap the menu icon (three lines) in the top right, and choose **Settings and activity**. Select **Meta Account**, then go to **Your information and permissions**. Tap **Export your information**, then select **Create export**.
+2. **Choose Profile and Destination**
+   Select your Instagram account from the list. Choose **Export to device** to save the file to your phone or computer.
+3. **Customize Data to Export**
+   On the confirmation screen, tap **Customise information**. Uncheck all options, then check ONLY **"Followers and following"**. Tap **Save**. *(Optional)* Set **Date range** to **All time**, choose **Format JSON**, and set **Media quality** to **Lower quality** for faster processing.
+4. **Start Export and Verify**
+   Tap **Start export** at the bottom. Enter your account password for security verification, then tap **Continue**.
+5. **Wait and Download File**
+   You will receive an email that the export is in progress. Wait until you get the second email saying your file is ready (usually a few minutes). Go back to *Export your information*, find your file under **Available downloads**, and tap **Download**. Tap **Download** again to save it to your device.
+6. **Access Your Files**
+   The file downloads as a ZIP archive. Open it using a file manager on your phone or extract it on your computer. Drag the `followers_and_following` folder or `followers_1.json` and `following.json` into the upload zone on the website.
+
 ## Features
 
 - **Full Relationship Categories:** Displays **Not following back**, **Fans**, **Mutual**, and all 8 Meta connection categories (*Pending requests*, *Recently unfollowed*, *Close friends*, *Blocked*, *Restricted*, *Hide story from*, *Recent requests*, *Dismissed suggestions*).
@@ -51,24 +68,7 @@ All processing happens in the browser. No data is sent to any server.
 - **CSV Export:** Clean CSV download protected against spreadsheet formula injection.
 - **Legal & Compliance:** Built-in Privacy Policy and Terms of Service ensuring transparency and GDPR/CCPA alignment.
 
-## Usage
-
-### Website (How to export and use JSON)
-
-1. **Open Settings Menu**
-   Go to your Instagram profile, tap the menu icon (three lines) in the top right, and choose **Settings and activity**. Select **Meta Account**, then go to **Your information and permissions**. Tap **Export your information**, then select **Create export**.
-2. **Choose Profile and Destination**
-   Select your Instagram account from the list. Choose **Export to device** to save the file to your phone or computer.
-3. **Customize Data to Export**
-   On the confirmation screen, tap **Customise information**. Uncheck all options, then check ONLY **"Followers and following"**. Tap **Save**. *(Optional)* Set **Date range** to **All time**, choose **Format JSON**, and set **Media quality** to **Lower quality** for faster processing.
-4. **Start Export and Verify**
-   Tap **Start export** at the bottom. Enter your account password for security verification, then tap **Continue**.
-5. **Wait and Download File**
-   You will receive an email that the export is in progress. Wait until you get the second email saying your file is ready (usually a few minutes). Go back to *Export your information*, find your file under **Available downloads**, and tap **Download**. Tap **Download** again to save it to your device.
-6. **Access Your Files**
-   The file downloads as a ZIP archive. Open it using a file manager on your phone or extract it on your computer. Drag the `followers_and_following` folder or `followers_1.json` and `following.json` into the upload zone on the website.
-
-### Extension (Manual Install from GitHub Releases)
+## Extension Installation (Manual from GitHub Releases)
 
 1. Download `instagram-checker-chrome.zip` (for Chrome/Edge/Brave) or `instagram-checker-firefox.zip` from [GitHub Releases](https://github.com/berkatsiallagan/instagram-checker/releases).
 2. Extract the ZIP file.
@@ -174,6 +174,21 @@ Proyek ini punya dua bentuk yang memakai satu core logic yang sama:
 
 Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana pun.
 
+## Cara Mendapatkan File JSON Instagram
+
+1. **Buka Menu Pengaturan**
+   Masuk ke profil Instagram Anda, ketuk ikon menu (tiga garis) di kanan atas, lalu pilih **Settings and activity**. Pilih **Meta Account** (Akun Meta), lalu masuk ke **Your information and permissions** (Informasi dan izin Anda). Ketuk **Export your information** (Ekspor informasi Anda), lalu pilih **Create export** (Buat ekspor).
+2. **Pilih Profil dan Tujuan**
+   Pilih akun Instagram Anda dari daftar profil. Pilih **Export to device** (Ekspor ke perangkat) untuk menyimpan file di HP/komputer Anda.
+3. **Atur Data yang Diekspor (Kustomisasi)**
+   Pada halaman konfirmasi, ketuk **Customise information** (Kustomisasi informasi). Hapus centang pada semua opsi, lalu **centang hanya pada "Followers and following"**. Ketuk **Save**. *(Opsional)* Atur **Date range** ke **All time** (Sepanjang waktu), pilih **Format JSON**, dan atur **Media quality** ke **Lower quality** (agar proses lebih cepat).
+4. **Mulai Ekspor dan Verifikasi**
+   Ketuk **Start export** di bagian bawah. Masukkan **password** akun Anda untuk verifikasi keamanan, lalu ketuk **Continue**.
+5. **Tunggu dan Unduh File**
+   Anda akan menerima email pemberitahuan bahwa proses sedang berjalan. Tunggu hingga Anda menerima email kedua yang menyatakan file **sudah siap** (biasanya hanya butuh beberapa menit). Buka kembali halaman *Export your information*, lalu pada bagian **Available downloads**, ketuk **Download**. Ketuk **Download** sekali lagi pada file yang muncul di layar untuk menyimpannya ke perangkat.
+6. **Akses File**
+   File akan terunduh dalam format ZIP/JSON. Buka file tersebut menggunakan aplikasi *file manager* di HP atau ekstrak di komputer. Tarik folder `followers_and_following` atau file `followers_1.json` dan `following.json` ke kotak di website.
+
 ## Fitur
 
 - **Kategori Relasi Lengkap:** Menampilkan **Tidak follback**, **Fans**, **Mutual**, dan 8 kategori file koneksi Meta (*Permintaan tertunda*, *Baru di-unfollow*, *Teman dekat*, *Diblokir*, *Dibatasi*, *Sembunyikan cerita*, *Permintaan baru*, *Saran dihapus*).
@@ -189,24 +204,7 @@ Semua pemrosesan terjadi di browser. Tidak ada data yang dikirim ke server mana 
 - **Ekspor CSV:** Ekspor data aman dengan sanitasi pencegahan formula injection di Excel/Sheets.
 - **Halaman Legal Terintegrasi:** Dilengkapi Kebijakan Privasi (`/privacy`) dan Syarat Ketentuan (`/terms`) yang transparan.
 
-## Cara Pakai
-
-### Website (Panduan Ekspor dan Pakai JSON)
-
-1. **Buka Menu Pengaturan**
-   Masuk ke profil Instagram Anda, ketuk ikon menu (tiga garis) di kanan atas, lalu pilih **Settings and activity**. Pilih **Meta Account** (Akun Meta), lalu masuk ke **Your information and permissions** (Informasi dan izin Anda). Ketuk **Export your information** (Ekspor informasi Anda), lalu pilih **Create export** (Buat ekspor).
-2. **Pilih Profil dan Tujuan**
-   Pilih akun Instagram Anda dari daftar profil. Pilih **Export to device** (Ekspor ke perangkat) untuk menyimpan file di HP/komputer Anda.
-3. **Atur Data yang Diekspor (Kustomisasi)**
-   Pada halaman konfirmasi, ketuk **Customise information** (Kustomisasi informasi). Hapus centang pada semua opsi, lalu **centang hanya pada "Followers and following"**. Ketuk **Save**. *(Opsional)* Atur **Date range** ke **All time** (Sepanjang waktu), pilih **Format JSON**, dan atur **Media quality** ke **Lower quality** (agar proses lebih cepat).
-4. **Mulai Ekspor dan Verifikasi**
-   Ketuk **Start export** di bagian bawah. Masukkan **password** akun Anda untuk verifikasi keamanan, lalu ketuk **Continue**.
-5. **Tunggu dan Unduh File**
-   Anda akan menerima email pemberitahuan bahwa proses sedang berjalan. Tunggu hingga Anda menerima email kedua yang menyatakan file **sudah siap** (biasanya hanya butuh beberapa menit). Buka kembali halaman *Export your information*, lalu pada bagian **Available downloads**, ketuk **Download**. Ketuk **Download** sekali lagi pada file yang muncul di layar untuk menyimpannya ke perangkat.
-6. **Akses File**
-   File akan terunduh dalam format ZIP/JSON. Buka file tersebut menggunakan aplikasi *file manager* di HP atau ekstrak di komputer. Tarik folder `followers_and_following` atau file `followers_1.json` dan `following.json` ke kotak di website.
-
-### Extension (Pemasangan Manual dari GitHub Releases)
+## Pemasangan Ekstensi (Manual dari GitHub Releases)
 
 1. Unduh file `instagram-checker-chrome.zip` (untuk Chrome/Edge/Brave) atau `instagram-checker-firefox.zip` dari [GitHub Releases](https://github.com/berkatsiallagan/instagram-checker/releases).
 2. Ekstrak file ZIP tersebut ke sebuah folder.
