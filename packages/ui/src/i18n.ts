@@ -50,6 +50,9 @@ export interface Strings {
   pwaInstallTitle: string;
   pwaInstallGuideIos: string;
   pwaInstallGuideAndroid: string;
+  starOnGithub: string;
+  starFeedbackPrompt: string;
+  starFeedbackBtn: string;
   developedBy: string;
   language: string;
   guideTitle: string;
@@ -128,6 +131,9 @@ const en: Strings = {
   pwaInstallTitle: "Install Instagram Checker as an application on your device",
   pwaInstallGuideIos: "To install: tap the Share button in Safari, then select 'Add to Home Screen'.",
   pwaInstallGuideAndroid: "To install: open the browser menu (three dots) and tap 'Install app' or 'Add to Home screen'.",
+  starOnGithub: "Star",
+  starFeedbackPrompt: "Found who does not follow you back? Support this open-source tool with a star on GitHub.",
+  starFeedbackBtn: "Star on GitHub",
   developedBy: "Developed by",
   language: "Language",
   guideTitle: "How to get your Instagram JSON files",
@@ -240,6 +246,9 @@ const id: Strings = {
   pwaInstallTitle: "Pasang Instagram Checker sebagai aplikasi di perangkat Anda",
   pwaInstallGuideIos: "Untuk memasang: ketuk tombol Bagikan (Share) di Safari, lalu pilih 'Tambahkan ke Layar Utama'.",
   pwaInstallGuideAndroid: "Untuk memasang: buka menu peramban (titik tiga) lalu pilih 'Pasang Aplikasi' atau 'Tambahkan ke Layar Utama'.",
+  starOnGithub: "Bintang",
+  starFeedbackPrompt: "Menemukan siapa yang tidak follow balik? Dukung alat open-source ini dengan bintang di GitHub.",
+  starFeedbackBtn: "Beri Bintang di GitHub",
   developedBy: "Dikembangkan oleh",
   language: "Bahasa",
   guideTitle: "Cara mendapatkan file JSON dari Instagram",

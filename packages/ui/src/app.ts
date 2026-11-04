@@ -184,10 +184,25 @@ export function mountApp(
     });
   });
 
+  const starLink = externalLink(
+    "https://github.com/berkatsiallagan/instagram-checker",
+    icon("star"),
+    el("span", {}, t.starOnGithub)
+  );
+  starLink.className = "star-link";
+  starLink.title = "Star on GitHub";
+
+  const topBarActions = el(
+    "div",
+    { className: "top-bar-actions" },
+    starLink,
+    el("div", { className: "lang-picker" }, icon("language"), langSelect)
+  );
+
   const topBar = el(
     "div",
     { className: "top-bar" },
-    el("div", { className: "lang-picker" }, icon("language"), langSelect)
+    topBarActions
   );
 
   interface BeforeInstallPromptEvent extends Event {
@@ -495,6 +510,24 @@ export function mountApp(
     }
   });
 
+  const starPromptBtn = externalLink(
+    "https://github.com/berkatsiallagan/instagram-checker",
+    t.starFeedbackBtn
+  );
+  starPromptBtn.className = "star-prompt-btn";
+
+  const starPrompt = el(
+    "div",
+    { className: "star-prompt" },
+    el(
+      "div",
+      { className: "star-prompt-text" },
+      icon("star"),
+      el("span", {}, t.starFeedbackPrompt)
+    ),
+    starPromptBtn
+  );
+
   const actionsRow = el("div", { className: "actions-row" }, exportBtn, copyBtn, resetBtn);
 
   const list = el("ul", { className: "list" });
@@ -506,6 +539,7 @@ export function mountApp(
     tabs,
     filterRow,
     list,
+    starPrompt,
     actionsRow
   );
   section.hidden = result === null;

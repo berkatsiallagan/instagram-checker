@@ -95,8 +95,31 @@ main {
   text-decoration: none;
 }
 
-.lang-picker {
+.top-bar-actions {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  background: var(--bg);
+}
+
+.star-link .icon {
+  color: #eab308;
+}
+
+.lang-picker {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -628,6 +651,40 @@ a {
 
 .list .empty {
   color: var(--muted);
+}
+
+.star-prompt {
+  margin: 14px 0 10px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.star-prompt-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg);
+}
+
+.star-prompt-text .icon {
+  color: #eab308;
+}
+
+.star-prompt-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  white-space: nowrap;
 }
 
 .actions-row {
